@@ -43,11 +43,22 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-
+        $this->loadComponent('Authentication.Authentication');
+        // $this->loadComponent('Authentication.Authentication',
+        //   [
+        //     'logoutRedirect' => '/users/login'  // Default is false
+        //   ]);
         /*
          * Enable the following component for recommended CakePHP form protection settings.
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
     }
+
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+      $this->Authentication->allowUnauthenticated(['view', 'login']);
+      // $this->Authentication->allowUnauthenticated(['view']);
+    }
+
 }
