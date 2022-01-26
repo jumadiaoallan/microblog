@@ -8,7 +8,18 @@
               <?= $this->Form->control('email', ['class' => 'form-control']) ?>
               <?= $this->Form->control('password', ['class' => 'form-control']) ?>
           </fieldset>
-          <?= $this->Form->button(__('Login'), ['class' => 'form-control btn btn-primary btn-md btn-block mt-2']); ?>
+          <div class="row mt-2">
+            <div class="col-6">
+              <?= $this->Form->button(__('Login'), ['class' => 'form-control btn btn-primary btn-md']); ?>
+            </div>
+            <div class="col-6">
+              <?= $this->Html->link(
+                    'Register',
+                    '/users/add',
+                    ['class' => 'form-control btn btn-warning']
+                ); ?>
+            </div>
+          </div>
           <?= $this->Form->end() ?>
     </div>
   </div>

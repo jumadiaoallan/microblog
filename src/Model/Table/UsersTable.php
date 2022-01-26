@@ -97,7 +97,13 @@ class UsersTable extends Table
             ->scalar('password')
             ->maxLength('password', 255)
             ->requirePresence('password', 'create')
-            ->notEmptyString('password');
+            ->notEmptyString('password')
+            ->add('password',  [
+                'required' => [
+                  'rule' => array('custom','(^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]*).{8,}$)'),
+                  'message' => 'Password required atlest 1 capital letter, 1 special character and minimum of 8 characters long',
+                  ]
+            ]);
 
         $validator
             ->requirePresence('age', 'create')
@@ -119,9 +125,14 @@ class UsersTable extends Table
             ->requirePresence('gender', 'create')
             ->notEmptyString('gender');
 
-        $validator
-            ->boolean('verified')
-            ->allowEmptyString('verified');
+          $validator
+              ->boolean('verified')
+              ->allowEmptyString('verified');
+
+          $validator
+              ->scalar('activation_token')
+              ->maxLength('activation_token', 255)
+              ->notEmptyString('activation_token');
 
         $validator
             ->dateTime('deleted')
@@ -144,4 +155,5 @@ class UsersTable extends Table
 
         return $rules;
     }
+
 }

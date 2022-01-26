@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Auth\DefaultPasswordHasher;
 
 /**
  * User Entity
@@ -18,6 +19,7 @@ use Cake\ORM\Entity;
  * @property string|null $banner_path
  * @property string $gender
  * @property bool|null $verified
+ * @property string $activation_token
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  * @property \Cake\I18n\FrozenTime|null $deleted
@@ -48,6 +50,7 @@ class User extends Entity
         'banner_path' => true,
         'gender' => true,
         'verified' => true,
+        'activation_token' => true,
         'created' => true,
         'modified' => true,
         'deleted' => true,

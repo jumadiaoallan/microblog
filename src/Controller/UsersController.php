@@ -2,7 +2,9 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-
+use Cake\Auth\DefaultPasswordHasher;
+use Cake\Utility\Security;
+use Cake\ORM\TableRegistry;
 /**
  * Users Controller
  *
@@ -16,6 +18,14 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
+
+
+     public function beforeFilter(\Cake\Event\EventInterface $event)
+     {
+         parent::beforeFilter($event);
+         $this->Authentication->allowUnauthenticated(['login']);
+         $this->Authentication->addUnauthenticatedActions(['add', 'view']);
+     }
 
 
      public function login()
@@ -32,8 +42,8 @@ class UsersController extends AppController
              return $this->redirect($target);
            } else {
              $this->Flash->error('Your account is not verified');
-             $target = $this->Authentication->getLoginRedirect() ?? 'users/logout';
-             return $this->redirect($target);
+             $this->Authentication->logout();
+             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
            }
          }
          if ($this->request->is('post') && !$result->isValid()) {
@@ -72,15 +82,36 @@ class UsersController extends AppController
      */
     public function add()
     {
+        $this->viewBuilder()->setLayout('login');
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+          $userTable = TableRegistry::get('Users');
+          $hasher = new DefaultPasswordHasher();
+          $fullname = $this->request->getData('full_name');
+          $email = $this->request->getData('email');
+          $gender = $this->request->getData('gender');
+          $age = $this->request->getData('age');
+          $password = $this->request->getData('password');
+          $activation_token = Security::hash(Security::randomBytes(32));
+          $data = [
+            'username'        => $this->request->getData('username'),
+            'full_name'        => $this->request->getData('full_name'),
+            'email'            => $this->request->getData('email'),
+            'gender'           => $this->request->getData('gender'),
+            'age'              => $this->request->getData('age'),
+            'password'         => $password,
+            'verified'         => FALSE,
+            'activation_token' => $activation_token,
+          ];
+          $user = $userTable->newEntity($data);
+          if ($userTable->save($user)) {
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->success(__('The user has been registered.'));
+            return $this->redirect(['action' => 'login']);
+
+          } else {
+            $this->Flash->error(__('Registration failed, please try again.'));
+          }
         }
         $this->set(compact('user'));
     }
@@ -134,4 +165,5 @@ class UsersController extends AppController
         $this->Authentication->logout();
         return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     }
+
 }

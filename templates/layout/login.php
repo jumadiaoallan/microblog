@@ -7,7 +7,7 @@
   </head>
   <body>
     <div class="container">
-      <div class="row justify-content-md-center" style="margin-top:10%;">
+      <div class="row justify-content-md-center" style="margin-top:5%;">
         <div class="col-6 p-3">
           <?= $this->Flash->render(); ?>
         </div>
