@@ -1,41 +1,22 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\User $user
- */
-?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $user->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="users form content">
+<div class="row justify-content-md-center p-3">
+    <div class="col-md-10 card p-3" style="background-color:#999999;color:white;">
+      <?php echo $this->Flash->render(); ?>
+          <h2 class="text-center">Edit Profile</h1>
             <?= $this->Form->create($user) ?>
             <fieldset>
-                <legend><?= __('Edit User') ?></legend>
                 <?php
-                    echo $this->Form->control('username');
-                    echo $this->Form->control('full_name');
-                    echo $this->Form->control('email');
-                    echo $this->Form->control('password');
-                    echo $this->Form->control('age');
-                    echo $this->Form->control('profile_path');
-                    echo $this->Form->control('banner_path');
-                    echo $this->Form->control('gender');
-                    echo $this->Form->control('verified');
-                    echo $this->Form->control('deleted', ['empty' => true]);
+                    echo $this->Form->control('full_name', ['class' => 'form-control mt-2']);
+                    echo $this->Form->control('username', ['class' => 'form-control mt-2']);
+                    echo $this->Form->control('age', ['class' => 'form-control mt-2']);
+                    echo '<label for="gender">Gender</label>';
+                    echo $this->Form->select('gender',['Male', 'Female'],['class' => 'form-control mt-2']);
+                    echo $this->Form->control('email', ['class' => 'form-control mt-2']);
+                    echo $this->Form->control('password', ['class' => 'form-control mt-2', 'value'=>'', 'required' => false]);
+                    echo $this->Form->control('confirm_password', ['type'=>'password','class' => 'form-control mt-2','required' => false]);
                 ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-info mt-2']) ?>
             <?= $this->Form->end() ?>
-        </div>
+
     </div>
 </div>

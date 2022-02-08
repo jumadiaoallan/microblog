@@ -61,7 +61,17 @@ class UsersTable extends Table
         ]);
         $this->hasMany('Posts', [
             'foreignKey' => 'user_id',
+            'sort' => ['Posts.created'=>'DESC'],
         ]);
+
+        $this->belongsTo('Followers', [
+            'foreignKey' => 'following_user',
+        ]);
+
+        $this->belongsTo('Followers', [
+            'foreignKey' => 'follower_user',
+        ]);
+
     }
 
     /**
@@ -84,7 +94,7 @@ class UsersTable extends Table
 
         $validator
             ->scalar('full_name')
-            ->maxLength('full_name', 255)
+            ->maxLength('full_name', 100)
             ->requirePresence('full_name', 'create')
             ->notEmptyString('full_name');
 
@@ -102,8 +112,11 @@ class UsersTable extends Table
                 'required' => [
                   'rule' => array('custom','(^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]*).{8,}$)'),
                   'message' => 'Password required atlest 1 capital letter, 1 special character and minimum of 8 characters long',
-                  ]
+                ]
             ]);
+
+        $validator
+            ->sameAs('confirm_password', 'password', 'Password match failed');
 
         $validator
             ->requirePresence('age', 'create')
@@ -137,6 +150,19 @@ class UsersTable extends Table
         $validator
             ->dateTime('deleted')
             ->allowEmptyDateTime('deleted');
+
+        $validator
+            ->notEmptyString('image')
+            ->add('image', [
+              'mimeType' => [
+                'rule' => ['mimeType', ['image/jpeg', 'image/png', 'image/jpg']],
+                'message' => 'Please upload only jpg, jpeg or png',
+              ],
+              'fileSize' => [
+                'rule' => ['fileSize', '<=', '5MB'],
+                'message' => 'Image file size must be less than 5MB',
+              ],
+            ]);
 
         return $validator;
     }

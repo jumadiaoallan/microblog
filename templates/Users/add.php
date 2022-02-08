@@ -1,5 +1,5 @@
 <div class="row justify-content-md-center">
-    <div class="col-10 card p-3">
+    <div class="col-12 card p-3">
             <center>
             <?php echo $this->Html->image('logo.png', array('alt' => 'Microblog', 'border' => '1', 'width'=>'250px', 'class'=>'mb-2')); ?>
             </center>

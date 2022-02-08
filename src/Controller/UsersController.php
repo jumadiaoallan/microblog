@@ -5,6 +5,10 @@ namespace App\Controller;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Utility\Security;
 use Cake\ORM\TableRegistry;
+use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
+use Cake\Mailer\TransportFactory;
+
 /**
  * Users Controller
  *
@@ -25,7 +29,10 @@ class UsersController extends AppController
          parent::beforeFilter($event);
          $this->Authentication->allowUnauthenticated(['login']);
          $this->Authentication->addUnauthenticatedActions(['add', 'view']);
+         $this->Authentication->addUnauthenticatedActions(['verification', 'view']);
      }
+
+
 
 
      public function login()
@@ -37,9 +44,10 @@ class UsersController extends AppController
          $getVerified = $result->getData();
 
          if ($result->isValid()) {
-           if ($getVerified['verified'] == 1) {
-             $target = $this->Authentication->getLoginRedirect() ?? '/users';
-             return $this->redirect($target);
+           if ($getVerified['verified'] == TRUE) {
+             $target = $this->Authentication->getLoginRedirect() ?? '/posts';
+             $_SESSION['user_id'] = $getVerified['id'];
+             return $this->redirect($target)  ;
            } else {
              $this->Flash->error('Your account is not verified');
              $this->Authentication->logout();
@@ -52,10 +60,23 @@ class UsersController extends AppController
 
      }
 
+     public function verification($token)
+     {
+       $this->viewBuilder()->setLayout('login');
+       $userTable = TableRegistry::get('Users');
+       $verify = $userTable->find('all')->where(['activation_token'=>$token])->first();
+       if ($verify['verified'] == TRUE) {
+         echo "This email verification is already expired";
+         exit();
+       }
+       $verify->verified = TRUE;
+       $userTable->save($verify);
+     }
+
     public function index()
     {
+        $this->viewBuilder()->setLayout('main');
         $users = $this->paginate($this->Users);
-
         $this->set(compact('users'));
     }
 
@@ -87,11 +108,11 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
           $userTable = TableRegistry::get('Users');
           $hasher = new DefaultPasswordHasher();
-          $fullname = $this->request->getData('full_name');
+          $full_name = $this->request->getData('full_name');
           $email = $this->request->getData('email');
-          $gender = $this->request->getData('gender');
-          $age = $this->request->getData('age');
           $password = $this->request->getData('password');
+          $confirm_password = $this->request->getData('confirm_password');
+
           $activation_token = Security::hash(Security::randomBytes(32));
           $data = [
             'username'        => $this->request->getData('username'),
@@ -100,6 +121,7 @@ class UsersController extends AppController
             'gender'           => $this->request->getData('gender'),
             'age'              => $this->request->getData('age'),
             'password'         => $password,
+            'confirm_password' => $confirm_password,
             'verified'         => FALSE,
             'activation_token' => $activation_token,
           ];
@@ -107,6 +129,16 @@ class UsersController extends AppController
           if ($userTable->save($user)) {
 
             $this->Flash->success(__('The user has been registered.'));
+            $mailer = new Mailer('default');
+            $mailer->setFrom(['noreply@codethepixel.com' => 'John Doe']);
+            $mailer->setViewVars(['full_name'=> $full_name,'token' => $activation_token])
+            ->setTo($email)
+            ->setEmailFormat('html')
+            ->setSubject('Verify New Account')
+            ->viewBuilder()
+                ->setTemplate('default')
+                ->setLayout('default');
+            $mailer->deliver();
             return $this->redirect(['action' => 'login']);
 
           } else {
@@ -114,6 +146,76 @@ class UsersController extends AppController
           }
         }
         $this->set(compact('user'));
+    }
+
+    public function profile($id = null)
+    {
+      $this->viewBuilder()->setLayout('main');
+      $userPost = TableRegistry::get('Posts');
+      $userDetails = TableRegistry::get('Users');
+      $follower = TableRegistry::get('Followers');
+      $alluser = $userDetails->find('all')->toArray();
+      $allpost = $userPost->find('all')->toArray();
+      $detail = $userDetails->find()
+        ->where(['id' => $id])->toArray();
+      $followers = $follower->find('all', ['withDeleted'])->toArray();
+
+      $users = $userPost->find()
+        ->contain(['Likes', 'Comments'])
+        ->order(['Posts.created' => 'DESC'])
+        ->where(['Posts.user_id' => $id]);
+      $user = $this->paginate($users, ['limit'=>'5']);
+
+
+      $this->set(compact('user', 'detail', 'alluser', 'allpost', 'followers'));
+    }
+
+
+    public function profilepic($id = null)
+    {
+      $user = $this->Users->get($id, [
+          'contain' => [],
+      ]);
+
+      if ($this->request->is(['patch', 'post', 'put'])) {
+          $image = $this->request->getData('update_profile');
+          $fileName = $image->getClientFilename();
+          $data = ["profile_path" => $fileName];
+          $user = $this->Users->patchEntity($user, $data);
+
+          $path = WWW_ROOT.'img'.DS."upload/".$fileName;
+          $image->moveTo($path);
+
+          if ($this->Users->save($user)) {
+              $this->Flash->success(__('The like has been saved.'));
+              return $this->redirect($this->referer());
+          }
+          $this->Flash->error(__('The like could not be saved. Please, try again.'));
+          return $this->redirect($this->referer());
+      }
+    }
+
+    public function banner($id = null)
+    {
+      $user = $this->Users->get($id, [
+          'contain' => [],
+      ]);
+
+      if ($this->request->is(['patch', 'post', 'put'])) {
+          $image = $this->request->getData('update_banner');
+          $fileName = $image->getClientFilename();
+          $data = ["banner_path" => $fileName];
+          $user = $this->Users->patchEntity($user,$data);
+
+          $path = WWW_ROOT.'img'.DS."upload/".$fileName;
+          $image->moveTo($path);
+          if ($this->Users->save($user)) {
+              $this->Flash->success(__('The like has been saved.'));
+              return $this->redirect($this->referer());
+          }
+          $this->Flash->error(__('The like could not be saved. Please, try again.'));
+          return $this->redirect($this->referer());
+      }
     }
 
     /**
@@ -125,15 +227,43 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
+        $this->viewBuilder()->setLayout('main');
+
+        $userLoggedIn = $this->Authentication->getResult()->getData()->id;
+
+        if ((int)$id != $userLoggedIn) {
+              return $this->redirect(['action' => 'edit/'.$userLoggedIn]);
+            }
+
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+          $password = $this->request->getData('password');
+          if (empty($password)) {
+            $data = [
+              'full_name' => $this->request->getData('full_name'),
+              'username' => $this->request->getData('username'),
+              'age' => $this->request->getData('age'),
+              'gender' => $this->request->getData('gender'),
+            ];
+          } else {
+            $data = [
+              'full_name' => $this->request->getData('full_name'),
+              'username' => $this->request->getData('username'),
+              'age' => $this->request->getData('age'),
+              'gender' => $this->request->getData('gender'),
+              'password' => $this->request->getData('password'),
+              'confirm_password' => $this->request->getData('confirm_password'),
+            ];
+          }
+
+            $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'edit/'.$user->id]);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
@@ -165,5 +295,4 @@ class UsersController extends AppController
         $this->Authentication->logout();
         return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     }
-
 }

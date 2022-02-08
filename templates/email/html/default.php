@@ -1,22 +1,16 @@
-<?php
-/**
- * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- * @link          https://cakephp.org CakePHP(tm) Project
- * @since         0.10.0
- * @license       https://opensource.org/licenses/mit-license.php MIT License
- * @var \App\View\AppView $this
- * @var string $content
- */
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    Hi <?= $full_name?> !,
+    <br>
 
-$lines = explode("\n", $content);
+    <p>Please click  <a href="http://localhost:8765/users/verification/<?= $token?>">here</a> to activate your account </p>
 
-foreach ($lines as $line) :
-    echo '<p> ' . $line . "</p>\n";
-endforeach;
+    Thank you.
+
+  </body>
+</html>
