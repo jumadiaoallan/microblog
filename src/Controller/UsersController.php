@@ -80,6 +80,7 @@ class UsersController extends AppController
         $this->viewBuilder()->setLayout('main');
         $users = $this->paginate($this->Users);
         $this->set(compact('users'));
+        return $this->redirect(['controller' => 'Posts',  'action' => 'index']);
     }
 
     /**
