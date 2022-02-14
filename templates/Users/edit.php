@@ -15,7 +15,7 @@
                     echo $this->Form->control('confirm_password', ['type'=>'password','class' => 'form-control mt-2','required' => false]);
                 ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-info mt-2']) ?>
+            <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary mt-2']) ?>
             <?= $this->Form->end() ?>
 
     </div>

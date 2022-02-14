@@ -77,9 +77,9 @@ function like(data) {
           let response = $.parseJSON(result);
           console.log(response);
           if (response['status'] == "UNLIKE") {
-            btnLike.innerHTML = "LIKE";
+            btnLike.innerHTML = "LIKE"+" ("+response['count']+")";
           } else if (response['status'] == "LIKE") {
-            btnLike.innerHTML = "UNLIKE";
+            btnLike.innerHTML = "UNLIKE"+" ("+response['count']+")";
             if (response['inserted_id'] != 0) {
               $(data).data('value', response['inserted_id']);
             }
@@ -135,9 +135,32 @@ function edtcmmt(data) {
     $('#comment_edit').attr('action', '/comments/edit/' + id);
   }
 
-  function deleteComment(data) {
-    var id = $(data).data('id');
-    $('#delete_comment').attr('action', '/comments/delete/'+id);
+  function deleteComment() {
+    var id = $("#comment_ids").val();
+
+    $.ajax({
+      url: "/comments/delete/"+id,
+      type: "JSON",
+      method: "POST",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrfToken"]').attr('content'),
+      },
+      success: function(result) {
+          if (result['message' == 'success']) {
+            $('#comment_section').load(location.href + "#comment_section");
+          } else {
+            console.log(result);
+          }
+      }
+    });
+
+    // $('#delete_comment').attr('action', '/comments/delete/'+id);
+  }
+
+  function deleteid(id) {
+    var id = $(id).data('id');
+    alert(id);
+    $('#comment_ids').val(id);
   }
 
 
@@ -219,6 +242,7 @@ function follow(data) {
         if (data['message'] == 'success') {
           if (data['data'] == 'unfollowed') {
             $("#btnFollow").html("Follow");
+            location.reload();
           }
         }
       }
@@ -240,6 +264,7 @@ function follow(data) {
         if (data['message'] == 'success') {
           if (data['data'] == 'followed') {
             $("#btnFollow").html("Following");
+            location.reload();
           }
         }
       }
@@ -269,4 +294,19 @@ function unfollow(data) {
     }
   });
 
+}
+
+function showComment(id) {
+  var id = $(id).data('id');
+  $("#post_"+id).removeClass('d-none');
+  $("#comment_"+id).focus();
+}
+
+function loadMore(data) {
+    var id = $(data).data('id');
+    var content = ".content_"+id+":hidden";
+    $(content).slice(0, 3).slideDown();
+    if($(".content:hidden").length == 0) {
+      $("#loadMore_"+id).text("No More Comment").addClass("noContent");
+    }
 }

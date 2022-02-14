@@ -123,16 +123,6 @@ class UsersTable extends Table
             ->notEmptyString('age');
 
         $validator
-            ->scalar('profile_path')
-            ->maxLength('profile_path', 255)
-            ->allowEmptyFile('profile_path');
-
-        $validator
-            ->scalar('banner_path')
-            ->maxLength('banner_path', 255)
-            ->allowEmptyString('banner_path');
-
-        $validator
             ->scalar('gender')
             ->maxLength('gender', 20)
             ->requirePresence('gender', 'create')
@@ -152,17 +142,26 @@ class UsersTable extends Table
             ->allowEmptyDateTime('deleted');
 
         $validator
-            ->notEmptyString('image')
-            ->add('image', [
-              'mimeType' => [
-                'rule' => ['mimeType', ['image/jpeg', 'image/png', 'image/jpg']],
+            ->notEmptyString('profile_path')
+            ->add('profile_path', [
+              'extension' => [
+                'rule' => ['extension', ['gif', 'png', 'jpg', 'jpeg']],
                 'message' => 'Please upload only jpg, jpeg or png',
-              ],
-              'fileSize' => [
-                'rule' => ['fileSize', '<=', '5MB'],
-                'message' => 'Image file size must be less than 5MB',
-              ],
+              ]
             ]);
+
+          $validator
+              ->notEmptyString('banner_path')
+              ->add('banner_path', [
+                'extension' => [
+                  'rule' => ['extension', ['gif', 'png', 'jpg', 'jpeg']],
+                  'message' => 'Please upload only jpg, jpeg or png',
+                ]
+              ]);
+
+          $validator
+              ->scalar('search')
+              ->notEmptyString('search');
 
         return $validator;
     }

@@ -1,5 +1,5 @@
-<div class="row justify-content-md-center">
-    <div class="col-12 card p-3">
+<div class="row justify-content-md-center mb-2">
+    <div class="col-12 card p-3" style="background-color:#999999;color:white;">
             <center>
             <?php echo $this->Html->image('logo.png', array('alt' => 'Microblog', 'border' => '1', 'width'=>'250px', 'class'=>'mb-2')); ?>
             </center>
@@ -20,7 +20,7 @@
                     echo $this->Form->control ('confirm_password',['type' => 'password', 'class' => 'form-control mt-2']);
                 ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-primary btn-md mt-2']) ?>
+            <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
             <?= $this->Form->end() ?>
     </div>
 </div>

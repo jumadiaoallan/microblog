@@ -8,13 +8,13 @@
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
 
-$this->layout = 'error';
+$this->layout = 'not_found';
 
 if (Configure::read('debug')) :
     $this->layout = 'dev_error';
 
     $this->assign('title', $message);
-    $this->assign('templateName', 'error400.php');
+    $this->assign('NotFound', 'not_found.php');
 
     $this->start('file');
 ?>
@@ -34,6 +34,7 @@ if (Configure::read('debug')) :
 $this->end();
 endif;
 ?>
+
 <h2><?= h($message) ?></h2>
 <p class="error">
     <strong><?= __d('cake', 'Error') ?>: </strong>

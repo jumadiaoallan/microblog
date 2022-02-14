@@ -1,19 +1,3 @@
-<style media="screen">
-.flex {
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-align-items: center;
-}
-
-.noContent {
-color: #fff !important;
-background-color: transparent !important;
-pointer-events: none;
-}
-
-</style>
-
 <?php if ($user->count() != 0): ?>
   <?php foreach ($user as $post): ?>
   <div class="row justify-content-md-center mt-3 card p-3" style="background-color:#999999;color:white;">
@@ -118,18 +102,20 @@ pointer-events: none;
              <?php if (count($liked) != 0): ?>
                <?php if ($find_user): ?>
                    <?php if ($post->likes[$like_user]['user_id'] == $this->Identity->get('id')): ?>
-                     UNLIKE (<?= count($liked)?>)
+                     UNLIKE
                    <?php else: ?>
-                     LIKE (<?= count($liked)?>)
+                     LIKE
                    <?php endif; ?>
                <?php endif; ?>
                <?php else: ?>
-                 LIKE (<?= count($liked)?>)
+                 LIKE
              <?php endif; ?>
+
+
         </button>
         </div>
         <div class="col-sm-4 mt-2">
-          <button type="button" name="button" class="form-control btn btn-sm btn-secondary" data-id="<?= $post->id?>" onclick="showComment(this)">COMMENT</button>
+          <button type="button" name="button" class="form-control btn btn-sm btn-secondary">COMMENT</button>
         </div>
         <div class="col-sm-4 mt-2">
           <button data-bs-toggle="modal" data-bs-target = "#sharePost" class="form-control btn btn-sm btn-secondary" data-postid = "<?= !empty($post->shared_post_id) ? $post->shared_post_id : $post->id?>" onclick="share(this)">SHARE</button>
@@ -140,7 +126,6 @@ pointer-events: none;
       <div class="row justify-content-md-center mt-2 p-3 card"  style="background-color:#999999;color:white;">
         <?php if (count($post->comments) != 0): ?>
           <?php foreach ($post->comments as $comment): ?>
-            <div class="content_<?=$post->id?>" style="display:none;">
               <div class="col-md-12">
                 <table style="width:100%;">
                   <tr>
@@ -159,7 +144,7 @@ pointer-events: none;
                     <td class="float-end">
                       <?php if ($this->Identity->get('id') == $comment->user_id): ?>
                         <sup data-bs-toggle="modal" data-id="<?= h($comment->id)?>" data-comment="<?= h($comment->comment)?>" onclick="edtcmmt(this)" style="cursor:pointer;" data-bs-target="#editComment">Edit</sup>
-                        <sup data-bs-toggle="modal" data-id="<?= h($comment->id)?>" style="cursor:pointer;" data-bs-target="#deleteComment" onclick="deleteid(this)">Delete</sup>
+                        <sup data-bs-toggle="modal" data-id="<?= h($comment->id)?>" style="cursor:pointer;" data-bs-target="#deleteComment" onclick="deleteComment(this)">Delete</sup>
                       <?php endif; ?>
                     </td>
                   </tr>
@@ -173,22 +158,17 @@ pointer-events: none;
                   <p style="text-align: justify;" class="p-2"><?= h($comment->comment) ?></p>
                   <hr>
               </div>
-              </div>
           <?php endforeach; ?>
           <?php else: ?>
             <span class="text-center">No Comment</span>
 
         <?php endif; ?>
-        <center>
-          <?php if (count($post->comments) != 0): ?>
-            <span id="loadMore_<?=$post->id?>" data-id = "<?=$post->id?>" onclick="loadMore(this)" style="cursor:pointer;">Load More</span>
-          <?php endif; ?>
-        </center>
+
       </div>
 
     </div>
     <!-- COMMENT FORM -->
-    <div class="row justify-content-md-center mt-2 p-2 d-none" id="post_<?= h($post->id) ?>">
+    <div class="row justify-content-md-center mt-2 p-2">
       <div class="col-md-12">
         <textarea name="comment" id="<?= "comment_".h($post->id) ?>" rows="3" class="form-control mt-2" style="min-width: 100%; background-color:#999999;color:white;" placeholder="WRITE A COMMENT"></textarea>
       </div>
@@ -209,25 +189,5 @@ pointer-events: none;
 <?= $this->element('pagination') ?>
 
 <script type="text/javascript">
-
-$(document).ready(function(){
-
-    <?php
-      $arr = [];
-      foreach ($user as $post) {
-        $contain = ".content_".$post->id;
-        array_push($arr, $contain);
-      }
-    ?>
-
-    var content = '<?= json_encode($arr)?>';
-    let result = $.parseJSON(content);
-
-    for (var i = 0; i < result.length; i++) {
-      $(result[i]).slice(0, 3).show();
-
-    }
-
-
-})
+  var isLogged_in = "<?= h($this->Identity->get('id'))?>";
 </script>

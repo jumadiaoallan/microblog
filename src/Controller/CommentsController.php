@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\ORM\TableRegistry;
 
 /**
  * Comments Controller
@@ -50,6 +51,22 @@ class CommentsController extends AppController
         if ($this->request->is('ajax')) {
             $comment = $this->Comments->patchEntity($comment, $this->request->getData());
             if ($this->Comments->save($comment)) {
+
+              //notification
+              $notification = TableRegistry::get("Notifications");
+              $posts = TableRegistry::get("Posts");
+              $userid = $posts->find()->where(['id'=>$this->request->getData("post_id")])->first();
+              $noti = $notification->newEmptyEntity();
+              $data = [
+                "user_id" => $userid->user_id,
+                "user_from" => $this->request->getData("user_id"),
+                "notification" => "Comment on your post.".$this->request->getData("post_id"),
+                "status" => false
+              ];
+              $noti = $notification->newEntity($data);
+              $notification->save($noti);
+              //end notification
+
                 echo "success";
             } else {
               echo "failed";
@@ -90,15 +107,18 @@ class CommentsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        $this->request->allowMethod(['post', 'delete', 'ajax']);
         $comment = $this->Comments->get($id);
         if ($this->Comments->delete($comment)) {
             $this->Flash->success(__('The comment has been deleted.'));
-            return $this->redirect($this->referer());
+            echo json_encode(['massage'=>'success']);
+            exit();
         } else {
-            return $this->redirect($this->referer());
+          echo json_encode(['massage'=>'failed']);
+          exit();;
         }
 
-        return $this->redirect($this->referer());
+        echo json_encode(['massage'=>'error']);
+        exit();;
     }
 }

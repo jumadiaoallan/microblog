@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <?= $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')) ?>
-<title><?= $header['title']?></title>
+<title>Not Found</title>
 <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css') ?>
 <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css') ?>
 <?= $this->Html->css('//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css') ?>
@@ -19,19 +19,20 @@
 </div>
 
 <div class="container">
+  <div class="text-center card col-12 p-2" style="background-color: #999999;color:white;">
+
+    <?= $this->fetch('content') ?>
+  </div>
   <?php
 
       echo $this->Flash->render();
 
    ?>
-    <?= $this->fetch('content') ?>
+
 </div>
 
 
 
 </body>
 <?= $this->Html->script('custom');?>
-<script type="text/javascript">
-  var isLogged_in = "<?= h($this->Identity->get('id'))?>";
-</script>
 </html>

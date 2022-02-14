@@ -80,14 +80,14 @@ class PostsTable extends Table
         $validator
             ->allowEmptyString('id', null, 'create');
 
-        $validator
-            ->scalar('image_path')
-            ->maxLength('image_path', 255)
-            ->allowEmptyString('image_path');
+        // $validator
+        //     ->scalar('image_path')
+        //     ->maxLength('image_path', 255)
+        //     ->allowEmptyString('image_path');
 
         $validator
             ->scalar('post')
-            ->maxLength('post', 255)
+            ->maxLength('post', 140)
             ->requirePresence('post', 'create')
             ->notEmptyString('post');
 
@@ -98,6 +98,16 @@ class PostsTable extends Table
         $validator
             ->dateTime('deleted')
             ->allowEmptyDateTime('deleted');
+
+        $validator
+            ->allowEmptyString('image_path')
+            ->add('image_path', [
+              'extension' => [
+                'rule' => ['extension', ['gif', 'png', 'jpg', 'jpeg']],
+                'message' => 'Please upload only jpg, jpeg or png',
+              ]
+            ]);
+
 
         return $validator;
     }

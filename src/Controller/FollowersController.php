@@ -17,17 +17,33 @@ class FollowersController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index($status = null, $id = null)
+    public function index($id = null)
     {
 
         $this->viewBuilder()->setLayout('main');
         $users = TableRegistry::get('Users');
+        $noti = TableRegistry::get('Notifications');
         $user = $users->find('all');
-        $followings = $this->Followers->find()
-                      ->where(['Followers.follower_user' => $id]);
+        $search = $users->newEmptyEntity();
+        $logged = $this->Authentication->getResult();
+        $loggedID = $logged->getData();
+        if ($_GET['type'] == "following") {
+          $followings = $this->Followers->find()
+                        ->where(['Followers.follower_user' => $id]);
+        } else {
+          $followings = $this->Followers->find()
+                        ->where(['Followers.following_user' => $id]);
+        }
+        $notification = $noti->find()
+                      ->where(['user_id' => $loggedID['id']])
+                      ->andWhere(['status'=>FALSE])
+                      ->andWhere(['user_from !=' => $loggedID['id']])
+                      ->count();
+        $header = ["title"=>ucwords($_GET['type']), "notification"=>$notification];
+
         $following = $this->paginate($followings, ['limit'=>10]);
-        
-        $this->set(compact('following', 'user'));
+
+        $this->set(compact('header','search','following', 'user'));
     }
 
     /**
@@ -56,13 +72,24 @@ class FollowersController extends AppController
         $checkDB = TableRegistry::get('Followers');
         $following = $this->request->getData('following_user');
         $follower = $this->request->getData('follower_user');
-
         $follow = $checkDB->find('all', ['withDeleted'])->where(['following_user'=>$following])->andWhere(['follower_user'=>$follower])->first();
 
         if (!empty($follow)) {
           $data = ['deleted' => null];
           $foll = $this->Followers->patchEntity($follow, $data);
           $this->Followers->save($foll);
+          //notification
+          $notification = TableRegistry::get("Notifications");
+          $noti = $notification->newEmptyEntity();
+          $data = [
+            "user_id" => $this->request->getData('following_user'),
+            "user_from" => $this->request->getData("follower_user"),
+            "notification" => "Followed you.",
+            "status" => false
+          ];
+          $noti = $notification->newEntity($data);
+          $notification->save($noti);
+          //end notification
           echo json_encode(['message'=> 'success', 'data' => 'followed']);
           exit();
         }
@@ -71,6 +98,18 @@ class FollowersController extends AppController
         if ($this->request->is('ajax')) {
             $follower = $this->Followers->patchEntity($follower, $this->request->getData());
             if ($this->Followers->save($follower)) {
+              //notification
+              $notification = TableRegistry::get("Notifications");
+              $noti = $notification->newEmptyEntity();
+              $data = [
+                "user_id" => $this->request->getData("following_user"),
+                "user_from" => $this->request->getData("follower_user"),
+                "notification" => "Followed you.",
+                "status" => false
+              ];
+              $noti = $notification->newEntity($data);
+              $notification->save($noti);
+              //end notification
                 echo json_encode(['message' => 'success', 'data' => 'followed']);
                 exit();
             }
@@ -115,6 +154,7 @@ class FollowersController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $follower = $this->Followers->get($id);
+
         if ($this->Followers->delete($follower)) {
             $this->Flash->success(__('The follower has been deleted.'));
             echo json_encode(['message'=>'success', 'data' => 'unfollowed']);

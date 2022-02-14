@@ -5,7 +5,7 @@
 
       <!-- Modal Header -->
       <div class="modal-header" style="background-color:#7f7f7f;">
-        <?php if ($this->Identity->get('id') == $detail[0]['id']): ?>
+        <?php if ($this->Identity->get('id') == $detail['id']): ?>
           <h4 class="modal-title">Edit Profile Photo</h4>
         <?php endif; ?>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -13,20 +13,20 @@
 
       <!-- Modal body -->
       <div class="modal-body"  style="background-color:#7f7f7f;">
-        <?php if ($this->Identity->get('id') == $detail[0]['id']): ?>
-          <?= $this->Form->create(null , ['url' => ['controller' => 'Users','action' => 'profilepic', $this->Identity->get('id')], 'type'=> 'file']) ?>
+        <?php if ($this->Identity->get('id') == $detail['id']): ?>
+          <?= $this->Form->create($photo , ['url' => ['controller' => 'Users','action' => 'profilepic', h($this->Identity->get('id'))], 'type'=> 'file']) ?>
         <?php endif; ?>
         <center>
-        <?= $this->Html->image('upload/'.$detail[0]['profile_path'], array('alt' => 'profile', 'border' => '1', 'class'=>'img-fluid', 'id'=>'profile')); ?>
+        <?= $this->Html->image('upload/'.h($detail['profile_path']), array('alt' => 'profile', 'border' => '1', 'class'=>'img-fluid', 'id'=>'profile')); ?>
         </center>
-        <?php if ($this->Identity->get('id') == $detail[0]['id']): ?>
+        <?php if ($this->Identity->get('id') == $detail['id']): ?>
           <?= $this->Form->control('update_profile',['type' => 'file', 'class' => 'form-control mt-2', 'id'=>'imgInp' ,'accept'=> 'image/png, image/jpg, image/jpeg', 'required'=>true]) ?>
         <?php endif; ?>
       </div>
-      <?php if ($this->Identity->get('id') == $detail[0]['id']): ?>
+      <?php if ($this->Identity->get('id') == $detail['id']): ?>
         <!-- Modal footer -->
         <div class="modal-footer"  style="background-color:#7f7f7f;">
-          <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-primary btn-md mt-2']) ?>
+          <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
           <?= $this->Form->end() ?>
         </div>
       <?php endif; ?>
@@ -42,7 +42,7 @@
 
       <!-- Modal Header -->
       <div class="modal-header" style="background-color:#7f7f7f;">
-        <?php if ($this->Identity->get('id') == $detail[0]['id']): ?>
+        <?php if ($this->Identity->get('id') == $detail['id']): ?>
           <h4 class="modal-title">Edit Banner Photo</h4>
         <?php endif; ?>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -50,20 +50,20 @@
 
       <!-- Modal body -->
       <div class="modal-body"  style="background-color:#7f7f7f;">
-        <?php if ($this->Identity->get('id') == $detail[0]['id']): ?>
-            <?= $this->Form->create(null , ['url' => ['controller' => 'Users','action' => 'banner', $this->Identity->get('id')], 'type'=> 'file']) ?>
+        <?php if ($this->Identity->get('id') == $detail['id']): ?>
+            <?= $this->Form->create($photo , ['url' => ['controller' => 'Users','action' => 'banner', h($this->Identity->get('id'))], 'type'=> 'file']) ?>
         <?php endif; ?>
 
         <center>
-        <?= $this->Html->image('upload/'.$detail[0]['banner_path'], array('alt' => 'Banner', 'border' => '1', 'class'=>'img-fluid', 'id'=>'banners')); ?>
+        <?= $this->Html->image('upload/'.h($detail['banner_path']), array('alt' => 'Banner', 'border' => '1', 'class'=>'img-fluid', 'id'=>'banners')); ?>
         </center>
-        <?php if ($this->Identity->get('id') == $detail[0]['id']): ?>
+        <?php if ($this->Identity->get('id') == $detail['id']): ?>
           <?= $this->Form->control('update_banner',['type' => 'file', 'class' => 'form-control mt-2', 'id'=>'imgInpbanner' ,'accept'=> 'image/png, image/jpg, image/jpeg', 'required'=>true]) ?>
         <?php endif; ?>
       </div>
-      <?php if ($this->Identity->get('id') == $detail[0]['id']): ?>
+      <?php if (h($this->Identity->get('id')) == h($detail['id'])): ?>
         <div class="modal-footer"  style="background-color:#7f7f7f;">
-          <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-primary btn-md mt-2']) ?>
+          <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
           <?= $this->Form->end() ?>
         </div>
       <?php endif; ?>
@@ -85,7 +85,7 @@
 
       <!-- Modal body -->
       <div class="modal-body"  style="background-color:#7f7f7f;">
-        <?= $this->Form->create(null , ['id'=>'edit_form', 'type' => 'file']) ?>
+        <?= $this->Form->create($post , ['id'=>'edit_form', 'type' => 'file']) ?>
           <?= $this->Form->control ('post',['type' => 'textarea', 'id'=> 'edit_post' , 'rows'=>3, 'class' => 'form-control mt-2','label' => false, 'style'=>'min-width: 100%; background-color:#999999;color:white;']) ?>
         <center>
         <img src="" id="image_edit" class="img-fluid mt-2" alt="">
@@ -173,17 +173,18 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body"  style="background-color:#7f7f7f;">
-          <?= $this->Form->create(null , ['id'=>'delete_comment']) ?>
+          <form >
             <label>Are you sure want to delete this comment?</label>
           <div class="row p-2" style="background-color:#7f7f7f;">
             <div class="col-6">
-              <button type="submit" class="form-control btn btn-secondary" name="submit">Yes</button>
+              <input type="hidden" id="comment_ids" value="">
+              <button type="submit" class="form-control btn btn-secondary" onclick="deleteComment()">Yes</button>
             </div>
             <div class="col-6">
               <span class="form-control btn btn-secondary" data-bs-dismiss="modal">No</span>
             </div>
           </div>
-          <?= $this->Form->end()?>
+          </form>
         </div>
         </div>
       </div>
@@ -226,7 +227,7 @@
           </div>
         <div class="row p-2" style="background-color:#7f7f7f;">
           <div class="col-6">
-            <?= $this->Form->control('user_id',['type'=>'hidden', 'value'=>$this->Identity->get('id')]) ?>
+            <?= $this->Form->control('user_id',['type'=>'hidden', 'value'=>h($this->Identity->get('id'))]) ?>
             <?= $this->Form->control('post_id',['type'=>'hidden', 'id'=>'post_id']) ?>
             <button type="submit" class="form-control btn btn-secondary">SHARE POST</button>
           </div>
