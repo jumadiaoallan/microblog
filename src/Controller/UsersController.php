@@ -39,7 +39,7 @@ class UsersController extends AppController
      {
 
         $this->viewBuilder()->setLayout('login');
-
+        $user = $this->Users->newEmptyEntity();
          $result = $this->Authentication->getResult();
          $getVerified = $result->getData();
          $title = "Login";
@@ -58,7 +58,7 @@ class UsersController extends AppController
              $this->Flash->error('Invalid username or password');
          }
 
-         $this->set(compact('title'));
+         $this->set(compact('title','user'));
 
      }
 
@@ -362,6 +362,17 @@ class UsersController extends AppController
 
         $result = $this->paginate($results, ['limit' => 5]);
       }
+
+      $logged = $this->Authentication->getResult();
+      $loggedID = $logged->getData();
+      $noti = TableRegistry::get('Notifications');
+      $notification = $noti->find()
+                    ->where(['user_id' => $loggedID['id']])
+                    ->andWhere(['status'=>FALSE])
+                    ->andWhere(['user_from !=' => $loggedID['id']])
+                    ->count();
+
+      $header = ["title"=>"Search Result", "notification"=>$notification];
 
       $this->set(compact('search','result'));
 

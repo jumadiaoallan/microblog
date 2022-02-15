@@ -15,7 +15,7 @@
 </head>
 <body style="background-color: #7f7f7f;" id="comment_section">
 <div class="m-4">
-    <?= $this->element('nav') ?>
+    <!-- <?= $this->element('nav') ?> -->
 </div>
 
 <div class="container">

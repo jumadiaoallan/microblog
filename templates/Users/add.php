@@ -1,7 +1,7 @@
 <div class="row justify-content-md-center mb-2">
     <div class="col-12 card p-3" style="background-color:#999999;color:white;">
             <center>
-            <?php echo $this->Html->image('logo.png', array('alt' => 'Microblog', 'border' => '1', 'width'=>'250px', 'class'=>'mb-2')); ?>
+            <?php echo $this->Html->image('logo.PNG', array('alt' => 'Microblog', 'border' => '1', 'width'=>'250px', 'class'=>'mb-2')); ?>
             </center>
             <?= $this->Form->create($user) ?>
             <fieldset>

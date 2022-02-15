@@ -1,20 +1,4 @@
 $( document ).ready(function() {
-
-  imgInpbanner.onchange = evt => {
-    const [file] = imgInpbanner.files
-    if (file) {
-      banners.src = URL.createObjectURL(file)
-    }
-    }
-
-
-  imgInp.onchange = evt => {
-    const [file] = imgInp.files
-    if (file) {
-      profile.src = URL.createObjectURL(file)
-    }
-    }
-
     post_edit.onchange = evt => {
       const [file] = post_edit.files
       if (file) {
@@ -207,7 +191,7 @@ function share(data) {
 
             if (arr['post']['image_path'] != null) {
               image.removeClass('d-none');
-              image.attr("src","../../img/upload/"+arr['post']['image_path']);
+              image.attr("src","../../img/post_upload/"+arr['post']['image_path']);
             } else {
               image.addClass('d-none');
             }

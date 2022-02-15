@@ -76,3 +76,5 @@
 
 
   <?= $this->element('modal') ?>
+
+  <?= $this->Html->script('photo_viewer');?>

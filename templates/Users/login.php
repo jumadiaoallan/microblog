@@ -3,7 +3,7 @@
           <center>
           <?php echo $this->Html->image('logo.PNG', array('alt' => 'Microblog', 'border' => '1', 'width'=>'250px', 'class'=>'mb-2')); ?>
           </center>
-          <?= $this->Form->create() ?>
+          <?= $this->Form->create($user, ['url' => ['controller' => 'Users','action' => 'login']]) ?>
           <fieldset>
               <?= $this->Form->control('email', ['class' => 'form-control']) ?>
               <?= $this->Form->control('password', ['class' => 'form-control']) ?>

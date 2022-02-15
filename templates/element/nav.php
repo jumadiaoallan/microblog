@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg  navbar-light" style="background-color: #666666;">
     <div class="container-fluid">
-        <a href="#" class="navbar-brand d-none d-xl-block d-xxl-none d-lg-block"><?php echo $this->Html->image('icon.png', array('alt' => 'Microblog', 'width'=>'40px')); ?></a>
+        <a href="#" class="navbar-brand d-none d-xl-block d-xxl-none d-lg-block"><?php echo $this->Html->image('icon.PNG', array('alt' => 'Microblog', 'width'=>'40px')); ?></a>
         <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
