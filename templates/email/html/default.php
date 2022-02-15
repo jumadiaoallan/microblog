@@ -8,7 +8,7 @@
     Hi <?= $full_name?> !,
     <br>
 
-    <p>Please click  <a href="http://192.168.1.11:8765/users/verification/<?= $token?>">here</a> to activate your account </p>
+    <p>Please click  <?=$this->Html->link('here',['controller' => 'Users', 'action' => 'verfication', h($token)])?> to activate your account </p>
 
     Thank you.
 
