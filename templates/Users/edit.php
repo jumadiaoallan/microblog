@@ -1,3 +1,10 @@
+
+<style media="screen">
+  .error-message {
+    color: red;
+    font-size: 12px;
+  }
+</style>
 <div class="row justify-content-md-center p-3">
     <div class="col-md-10 card p-3" style="background-color:#999999;color:white;">
       <?php echo $this->Flash->render(); ?>

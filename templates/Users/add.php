@@ -1,3 +1,9 @@
+<style media="screen">
+  .error-message {
+    color: red;
+    font-size: 12px;
+  }
+</style>
 <div class="row justify-content-md-center mb-2">
     <div class="col-12 card p-3" style="background-color:#999999;color:white;">
             <center>

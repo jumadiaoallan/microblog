@@ -96,7 +96,13 @@ class UsersTable extends Table
             ->scalar('full_name')
             ->maxLength('full_name', 100)
             ->requirePresence('full_name', 'create')
-            ->notEmptyString('full_name');
+            ->notEmptyString('full_name')
+            ->add('full_name',[
+              'custom' => [
+                'rule' => ['custom', '/^[a-z ]*$/i'],
+                'message' => 'Alphabetical characters only'
+              ]
+            ]);
 
         $validator
             ->email('email')
