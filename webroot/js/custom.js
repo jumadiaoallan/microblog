@@ -289,7 +289,7 @@ function loadMore(data) {
     var id = $(data).data('id');
     var content = ".content_"+id+":hidden";
     $(content).slice(0, 3).slideDown();
-    if($(".content:hidden").length == 0) {
+    if($(content).length == 0) {
       $("#loadMore_"+id).text("No More Comment").addClass("noContent");
     }
 }
