@@ -130,7 +130,7 @@ function edtcmmt(data) {
         'X-CSRF-TOKEN': $('meta[name="csrfToken"]').attr('content'),
       },
       success: function(result) {
-          if (result['message' == 'success']) {
+          if (result['message'] == 'success') {
             $('#comment_section').load(location.href + "#comment_section");
           } else {
             console.log(result);
@@ -143,7 +143,6 @@ function edtcmmt(data) {
 
   function deleteid(id) {
     var id = $(id).data('id');
-    alert(id);
     $('#comment_ids').val(id);
   }
 

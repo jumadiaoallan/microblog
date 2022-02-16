@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <?= $this->Html->meta('img','img/icon.PNG',['type' => 'icon']) ?>
     <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css') ?>
     <title><?= $title ?></title>
   </head>

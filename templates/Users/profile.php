@@ -1,10 +1,15 @@
 <div class="row justify-content-md-center">
   <div class="col-md-12">
-      <?= $this->Html->image('upload/'.h($detail['banner_path']), array('alt' => 'Banner', 'border' => '1', 'class'=>'img-fluid', 'style'=>'width:100%;cursor:pointer', 'data-bs-toggle'=>'modal', 'data-bs-target'=>'#banner')); ?>
+      <div class="banner">
+        <?= $this->Html->image('upload/'.h($detail['banner_path']), array('alt' => 'Banner', 'border' => '1', 'class'=>'img-fluid', 'style'=>'width:100%;cursor:pointer', 'data-bs-toggle'=>'modal', 'data-bs-target'=>'#banner')); ?>
+      </div>
   </div>
-  <div class="col-md-12" style="margin-top:-15%;">
+  <div class="col-md-12 " style="margin-top:-15%;">
     <center>
-    <?= $this->Html->image('upload/'.h($detail['profile_path']), array('alt' => 'Profile', 'border' => '1', 'class'=>'img-fluid rounded-circle', 'width'=>'20%', 'data-bs-toggle'=>'modal', 'data-bs-target'=>'#profiles', 'style'=>'cursor:pointer')); ?>
+      <div class="profile">
+        <?= $this->Html->image('upload/'.h($detail['profile_path']), array('alt' => 'Profile', 'border' => '1', 'class'=>'img-fluid', 'data-bs-toggle'=>'modal', 'data-bs-target'=>'#profiles', 'style'=>'cursor:pointer')); ?>
+      </div>
+
     </center>
   </div>
   <div class="col-md-12 text-center mt-2 text-white">

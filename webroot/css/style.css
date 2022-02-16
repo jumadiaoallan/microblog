@@ -1,0 +1,49 @@
+.flex {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+align-items: center;
+}
+
+.noContent {
+color: #fff !important;
+background-color: transparent !important;
+pointer-events: none;
+}
+
+.profile {
+  width: 20%;
+  text-align: center;
+  position: relative;
+  padding-bottom: 20%;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #white;
+}
+
+.profile img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+.banner {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  padding-bottom: 30%;
+  overflow: hidden;
+  background-color: #white;
+}
+
+.banner img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}

@@ -114,10 +114,11 @@ class CommentsController extends AppController
             echo json_encode(['massage'=>'success']);
             exit();
         } else {
+            $this->Flash->error(__('Something went wrong, please try again.'));
           echo json_encode(['massage'=>'failed']);
           exit();;
         }
-
+        $this->Flash->error(__('Something went wrong, please try again.'));
         echo json_encode(['massage'=>'error']);
         exit();;
     }

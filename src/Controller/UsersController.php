@@ -136,7 +136,7 @@ class UsersController extends AppController
 
             $this->Flash->success(__('Register successful, Please see email for verification.'));
             $mailer = new Mailer('default');
-            $mailer->setFrom(['noreply@mail.com' => 'John Doe']);
+            $mailer->setFrom(['allanjumadiao.yns@gmail.com' => 'John Doe']);
             $mailer->setViewVars(['full_name'=> $full_name,'token' => $activation_token])
             ->setTo($email)
             ->setEmailFormat('html')
@@ -205,7 +205,7 @@ class UsersController extends AppController
 
       if ($this->request->is(['patch', 'post', 'put'])) {
           $image = $this->request->getData('update_profile');
-          $fileName = $image->getClientFilename();
+          $fileName = time()."_".$image->getClientFilename();
           $data = ["profile_path" => $fileName];
           $user = $this->Users->patchEntity($user, $data);
 
@@ -229,7 +229,7 @@ class UsersController extends AppController
 
       if ($this->request->is(['patch', 'post', 'put'])) {
           $image = $this->request->getData('update_banner');
-          $fileName = $image->getClientFilename();
+          $fileName = time()."_".$image->getClientFilename();
           $data = ["banner_path" => $fileName];
           $user = $this->Users->patchEntity($user,$data);
 

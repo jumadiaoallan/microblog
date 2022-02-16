@@ -1,19 +1,3 @@
-<style media="screen">
-.flex {
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-align-items: center;
-}
-
-.noContent {
-color: #fff !important;
-background-color: transparent !important;
-pointer-events: none;
-}
-
-</style>
-
 <?php if ($user->count() != 0): ?>
   <?php foreach ($user as $post): ?>
   <div class="row justify-content-md-center mt-3 card p-3" style="background-color:#999999;color:white;">

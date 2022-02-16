@@ -103,7 +103,7 @@ class PostsController extends AppController
         $image = $this->request->getData('image_post');
         if (!empty($image->getClientFilename())) {
           $image = $this->request->getData('image_post');
-          $fileName = $image->getClientFilename();
+          $fileName = time()."_".$image->getClientFilename();
           $path = WWW_ROOT.'img'.DS."post_upload/".$fileName;
           $image->moveTo($path);
         } else {
