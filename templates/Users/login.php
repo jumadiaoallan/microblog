@@ -5,8 +5,8 @@
           </center>
           <?= $this->Form->create($user, ['url' => ['controller' => 'Users','action' => 'login']]) ?>
           <fieldset>
-              <?= $this->Form->control('email', ['class' => 'form-control']) ?>
-              <?= $this->Form->control('password', ['class' => 'form-control']) ?>
+              <?= $this->Form->control('email', ['class' => 'form-control','style'=>'background-color:#999999;color:white;']) ?>
+              <?= $this->Form->control('password', ['class' => 'form-control','style'=>'background-color:#999999;color:white;']) ?>
           </fieldset>
           <div class="row mt-2">
             <div class="col-6">
