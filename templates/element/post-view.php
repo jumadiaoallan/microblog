@@ -72,11 +72,11 @@
                     ['controller' => 'Posts', 'action' => 'view', h($shared->id)],
                     ['style' => 'color:inherit;text-decoration:none;']); ?>
                     <p style="text-align: justify;"><?= h($shared->post) ?></p>
-                    <span>
                       <?php if (!empty($shared->image_path)): ?>
-                        <?= $this->Html->image('post_upload/'.h($shared->image_path), array('alt' => 'Microblog', 'border' => '1', 'class'=> 'img-fluid mx-auto d-block')); ?>
+                        <div class="post_photo">
+                          <?= $this->Html->image('post_upload/'.h($shared->image_path), array('alt' => 'Microblog', 'border' => '1', 'class'=> 'img-fluid mx-auto d-block')); ?>
+                        </div>
                       <?php endif; ?>
-                    </span>
                   </div>
                   </div>
                 <?php endif; ?>
@@ -84,11 +84,12 @@
               <?php endforeach; ?>
       <?php endif; ?>
 
-      <span>
+
         <?php if (!empty($post->image_path)): ?>
-          <?= $this->Html->image('post_upload/'.h($post->image_path), array('alt' => 'Microblog', 'border' => '1', 'class'=> 'img-fluid mx-auto d-block')); ?>
+        <div class="post_photo">
+          <?= $this->Html->image('post_upload/'.h($post->image_path), array('alt' => 'Microblog', 'border' => '1', 'class'=> 'img-fluid img-thumbnail')); ?>
+        </div>
         <?php endif; ?>
-      </span>
     </div>
     <div class="col-md-12">
       <div class="row">

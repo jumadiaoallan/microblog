@@ -376,7 +376,7 @@ class UsersController extends AppController
 
       $header = ["title"=>"Search Result", "notification"=>$notification];
 
-      $this->set(compact('search','result'));
+      $this->set(compact('header','search','result'));
 
     }
 
