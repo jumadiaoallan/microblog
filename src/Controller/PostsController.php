@@ -93,9 +93,12 @@ class PostsController extends AppController
           $userDetails = TableRegistry::get('Users');
           $search = $userDetails->newEmptyEntity();
           $userPost = TableRegistry::get('Posts');
-          $allpost = $userPost->find('all')->toArray();
+          $allpost = $userPost->find('all', ['withDeleted'])->toArray();
+
           $post = $this->Posts->get($id, ['contain' => ['Likes', 'Comments'],]);
+
           $alluser = $userDetails->find('all')->toArray();
+
           $this->set(compact('post','header', 'search','alluser', 'allpost'));
         }
     }

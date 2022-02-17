@@ -167,7 +167,7 @@ class UsersController extends AppController
       $follower = TableRegistry::get('Followers');
       $alluser = $userDetails->find('all')->toArray();
       $post = $userPost->newEmptyEntity();
-      $allpost = $userPost->find('all')->toArray();
+      $allpost = $userPost->find('all', ['withDeleted'])->toArray();
       $logged = $this->Authentication->getResult();
       $loggedID = $logged->getData();
       $noti = TableRegistry::get('Notifications');
@@ -206,6 +206,11 @@ class UsersController extends AppController
       ]);
 
       if ($this->request->is(['patch', 'post', 'put'])) {
+
+         if ($this->request->getData('update_profile')->getClientFilename() == '') {
+           return $this->redirect($this->referer());
+         }
+
           $image = $this->request->getData('update_profile');
           $fileName = time()."_".$image->getClientFilename();
           $data = ["profile_path" => $fileName];
