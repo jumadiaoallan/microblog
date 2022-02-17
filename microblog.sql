@@ -200,7 +200,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `full_name`, `email`, `password`, `age`, `profile_path`, `banner_path`, `gender`, `verified`, `activation_token`, `created`, `modified`, `deleted`) VALUES
 (1, 'allanjumadiao', 'Allan L. Jumadiao', 'allanjumadiao.yns@gmail.com', '$2y$10$kQsVKGJvYfh8usfNdBCHqOgPD1.oZWM9/aOf840.C90FGrxRGl79m', 26, NULL, NULL, '', 1, '', NULL, NULL, NULL),
-(23, 'jumadiaoallan', 'Allan Jumadiao', 'allan.jumadiao01@gmail.com', '$2y$10$kQsVKGJvYfh8usfNdBCHqOgPD1.oZWM9/aOf840.C90FGrxRGl79m', 26, 'icon.PNG', 'logo.png', '0', 1, '42c48d010e8b214c656db68c48b90cfd18b4ac78', '2022-01-26 08:36:39', '2022-01-26 08:36:39', NULL),
+(23, 'jumadiaoallan', 'Allan Jumadiao', 'allan.jumadiao01@gmail.com', '$2y$10$kQsVKGJvYfh8usfNdBCHqOgPD1.oZWM9/aOf840.C90FGrxRGl79m', 26, 'icon.PNG', 'logo.PNG', '0', 1, '42c48d010e8b214c656db68c48b90cfd18b4ac78', '2022-01-26 08:36:39', '2022-01-26 08:36:39', NULL),
 (44, 'allan.jumadiao', 'Allan Lazada Jumadiao', 'allanjumadiao.bioessence@gmail.com', '$2y$10$XbBpnMfgQUDjk8I51/W8Mu72xpnz50JqL7t/eeZaxWsqH9KEK3xwG', 26, 'icon.PNG', 'solo.png', '0', 1, 'dd0da291b8e258a0b8bbeb66b68bc2a4b37a7330', '2022-01-27 03:11:53', '2022-02-04 02:51:38', NULL);
 
 --

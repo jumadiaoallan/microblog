@@ -23,6 +23,7 @@ class PostsController extends AppController
         $userPost = TableRegistry::get('Posts');
         $userDetails = TableRegistry::get('Users');
         $noti = TableRegistry::get('Notifications');
+        $follow = TableRegistry::get('Followers');
         $logged = $this->Authentication->getResult();
         $loggedID = $logged->getData();
 
@@ -40,11 +41,21 @@ class PostsController extends AppController
         $post = $userPost->newEmptyEntity();
         $search = $userDetails->newEmptyEntity();
         $alluser = $userDetails->find('all')->toArray();
-        $allpost = $userPost->find('all')->toArray();
+        $allpost = $userPost->find('all', ['withDeleted'])->toArray();
         $detail = $userDetails->find('all')->toArray();
-        $users = $userPost->find()
-          ->contain(['Comments','Likes'])
-          ->order(['Posts.created' => 'DESC']);
+        $followings = $follow->find('all')
+                     ->where(['follower_user' => $loggedID['id']]);
+
+        $arr = [$loggedID['id']];
+        foreach ($followings as $following) {
+          $param = $following->following_user;
+          array_push($arr, $param);
+        }
+
+          $users = $userPost->find()
+            ->contain(['Comments','Likes'])
+            ->order(['Posts.created' => 'DESC'])
+            ->where(['Posts.user_id IN' => $arr]);
 
         $user = $this->paginate($users, ['limit'=>'5']);
         $header = ["title"=>"Homepage", "notification"=>$notification];

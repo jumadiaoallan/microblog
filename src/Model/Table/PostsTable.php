@@ -55,7 +55,7 @@ class PostsTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
+            'foreignKey' => 'id',
             'joinType' => 'INNER',
         ]);
 
@@ -67,6 +67,12 @@ class PostsTable extends Table
         $this->hasMany('Likes', [
             'foreignKey' => 'post_id',
         ]);
+
+       $this->hasMany('Followers', [
+            'foreignKey' => 'follower_user',
+            'joinType' => 'INNER',
+       ]);
+
     }
 
     /**

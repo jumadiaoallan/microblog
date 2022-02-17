@@ -63,6 +63,10 @@ class FollowersTable extends Table
           'foreignKey' => 'id',
         ]);
 
+        $this->hasOne('Posts', [
+          'foreignKey' => 'user_id',
+        ]);
+
     }
 
     /**

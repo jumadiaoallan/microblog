@@ -206,7 +206,7 @@
           <div class="col-md-12">
             <table style="width:100%;">
               <tr>
-                <td style=" width:42px;" rowspan="2" class="p-2"> <?= $this->Html->image('upload/icon.png', array('alt' => 'Microblog', 'border' => '1', 'width'=>'40px', 'id'=>'sprofile')); ?> </td>
+                <td style=" width:42px;" rowspan="2" class="p-2"> <?= $this->Html->image('upload/icon.PNG', array('alt' => 'Microblog', 'border' => '1', 'width'=>'40px', 'id'=>'sprofile')); ?> </td>
                 <td>
                   <span id="sname"> Allan  </span>
                 </td>
@@ -220,7 +220,7 @@
             <p style="text-align: justify;" id="spost" >Test Post with Image</p>
             <span>
               <center>
-                 <?= $this->Html->image('upload/logo.png', array('alt' => 'Microblog', 'border' => '1', 'class'=> 'img-fluid d-none', 'id'=>'simage')); ?>
+                 <?= $this->Html->image('upload/logo.PNG', array('alt' => 'Microblog', 'border' => '1', 'class'=> 'img-fluid d-none', 'id'=>'simage')); ?>
               </center>
             </span>
           </div>

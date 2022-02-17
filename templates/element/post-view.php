@@ -39,8 +39,7 @@
 
       <?php if (!empty($post->shared_post_id)): ?>
               <?php foreach ($allpost as $shared): ?>
-
-                <?php if ($post->shared_post_id == $shared->id): ?>
+                <?php if ($post->shared_post_id == $shared->id && $post->deleted != null): ?>
 
                   <div class="row card p-3" style="background-color:#999999;color:white;">
                     <div class="col-md-12">
@@ -79,6 +78,16 @@
                       <?php endif; ?>
                   </div>
                   </div>
+                  <?php else: ?>
+                    <?php if ($post->shared_post_id == $shared->id && $post->deleted == null): ?>
+
+                          <div class="row card p-3" style="background-color:#999999;color:white;">
+                             <div class="col-md-12 text-center">
+                               Shared content is not available.
+                             </div>
+                          </div>
+
+                    <?php endif; ?>
                 <?php endif; ?>
 
               <?php endforeach; ?>
