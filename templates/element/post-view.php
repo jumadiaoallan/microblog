@@ -39,57 +39,53 @@
 
       <?php if (!empty($post->shared_post_id)): ?>
               <?php foreach ($allpost as $shared): ?>
-                <?php if ($post->shared_post_id == $shared->id && $post->deleted != null): ?>
+                <?php if ($post->shared_post_id == $shared->id): ?>
+                  <?php if ($shared->deleted == null): ?>
+                    <div class="row card p-3" style="background-color:#999999;color:white;">
+                      <div class="col-md-12">
+                        <table style="width:100%;">
+                          <tr>
+                            <?php foreach ($alluser as $userDetail): ?>
+                            <?php if ($userDetail->id == $shared->user_id): ?>
+                            <td style=" width:42px;" rowspan="2" class="p-2">
+                              <?= $this->Html->image("upload/".h($userDetail->profile_path), ["alt" => "Microblog", 'width'=>'40px', 'url' => ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)]])?>
+                            </td>
+                            <td>
+                              <?= $this->Html->link(
+                              h($userDetail->full_name),
+                              ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)],
+                              ['style' => 'color:inherit;text-decoration:none;']); ?>
+                            </td>
+                          <?php endif; ?>
+                          <?php endforeach; ?>
+                          </tr>
+                          <tr>
+                            <td> <sup><?=  date('m-d-Y H:i A', strtotime(h($shared->created))) ?></sup></td>
+                          </tr>
+                        </table>
+                      </div>
 
-                  <div class="row card p-3" style="background-color:#999999;color:white;">
                     <div class="col-md-12">
-                      <table style="width:100%;">
-                        <tr>
-                          <?php foreach ($alluser as $userDetail): ?>
-                          <?php if ($userDetail->id == $shared->user_id): ?>
-                          <td style=" width:42px;" rowspan="2" class="p-2">
-                            <?= $this->Html->image("upload/".h($userDetail->profile_path), ["alt" => "Microblog", 'width'=>'40px', 'url' => ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)]])?>
-                          </td>
-                          <td>
-                            <?= $this->Html->link(
-                            h($userDetail->full_name),
-                            ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)],
-                            ['style' => 'color:inherit;text-decoration:none;']); ?>
-                          </td>
-                        <?php endif; ?>
-                        <?php endforeach; ?>
-                        </tr>
-                        <tr>
-                          <td> <sup><?=  date('m-d-Y H:i A', strtotime(h($shared->created))) ?></sup></td>
-                        </tr>
-                      </table>
-                    </div>
-
-                  <div class="col-md-12">
-                    <?= $this->Html->link(
-                    'Post Description:',
-                    ['controller' => 'Posts', 'action' => 'view', h($shared->id)],
-                    ['style' => 'color:inherit;text-decoration:none;']); ?>
-                    <p style="text-align: justify;"><?= h($shared->post) ?></p>
-                      <?php if (!empty($shared->image_path)): ?>
-                        <div class="post_photo">
-                          <?= $this->Html->image('post_upload/'.h($shared->image_path), array('alt' => 'Microblog', 'border' => '1', 'class'=> 'img-fluid mx-auto d-block')); ?>
-                        </div>
-                      <?php endif; ?>
-                  </div>
-                  </div>
-                  <?php else: ?>
-                    <?php if ($post->shared_post_id == $shared->id && $post->deleted == null): ?>
-
-                          <div class="row card p-3" style="background-color:#999999;color:white;">
-                             <div class="col-md-12 text-center">
-                               Shared content is not available.
-                             </div>
+                      <?= $this->Html->link(
+                      'Post Description:',
+                      ['controller' => 'Posts', 'action' => 'view', h($shared->id)],
+                      ['style' => 'color:inherit;text-decoration:none;']); ?>
+                      <p style="text-align: justify;"><?= h($shared->post) ?></p>
+                        <?php if (!empty($shared->image_path)): ?>
+                          <div class="post_photo">
+                            <?= $this->Html->image('post_upload/'.h($shared->image_path), array('alt' => 'Microblog', 'border' => '1', 'class'=> 'img-fluid mx-auto d-block')); ?>
                           </div>
-
-                    <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                    </div>
+                    <?php else: ?>
+                      <div class="row card p-3" style="background-color:#999999;color:white;">
+                        <div class="col-md-12 text-center">
+                           Shared contain is not available.
+                        </div>
+                      </div>
+                  <?php endif; ?>
                 <?php endif; ?>
-
               <?php endforeach; ?>
       <?php endif; ?>
 
