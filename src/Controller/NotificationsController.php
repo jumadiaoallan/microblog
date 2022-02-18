@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use Cake\ORM\TableRegistry;
 
 /**
@@ -18,20 +19,20 @@ class NotificationsController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      */
 
-     public function beforeFilter(\Cake\Event\EventInterface $event)
-     {
-         parent::beforeFilter($event);
-         $this->Authentication->allowUnauthenticated(['login']);
-         $this->Authentication->addUnauthenticatedActions(['add', 'view']);
-         $this->Authentication->addUnauthenticatedActions(['verification', 'view']);
-     }
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        $this->Authentication->allowUnauthenticated(['login']);
+        $this->Authentication->addUnauthenticatedActions(['add', 'view']);
+        $this->Authentication->addUnauthenticatedActions(['verification', 'view']);
+    }
 
     public function index()
     {
 
         $this->viewBuilder()->setLayout('main');
-        $users = TableRegistry::get("Users");
-        $posts = TableRegistry::get("Posts");
+        $users = TableRegistry::get('Users');
+        $posts = TableRegistry::get('Posts');
         $search = $users->newEmptyEntity();
         $user = $users->find()->toArray();
         $post = $posts->find()->toArray();
@@ -39,9 +40,9 @@ class NotificationsController extends AppController
         $usersLogedin = $this->Authentication->getResult();
         $logged = $usersLogedin->getData();
         if (!empty($logged)) {
-          $id = $logged["id"];
+            $id = $logged['id'];
         } else {
-          $id = 0;
+            $id = 0;
         }
         $notifications = $this->Notifications->find()
                      ->where(['user_id' => $id])
@@ -54,19 +55,19 @@ class NotificationsController extends AppController
                       ->order(['created' => 'DESC']);
 
         foreach ($notifications as $save) {
-          if ($save->status != TRUE) {
-            $getNoti = $this->Notifications->get($save->id, [
+            if ($save->status != true) {
+                $getNoti = $this->Notifications->get($save->id, [
                 'contain' => [],
-            ]);
-            $data = ['status' => TRUE];
-            $notiSave = $this->Notifications->patchEntity($getNoti, $data);
-            $this->Notifications->save($notiSave);
-          }
+                ]);
+                $data = ['status' => true];
+                $notiSave = $this->Notifications->patchEntity($getNoti, $data);
+                $this->Notifications->save($notiSave);
+            }
         }
 
         $notification = $this->paginate($notifications, ['limit' => 5]);
-        $header = ["title"=>"Notifications", "notification"=>$noti_count->where(['status'=>FALSE])->count()];
-        $this->set(compact('header','search','notifications', 'user', 'post'));
+        $header = ['title' => 'Notifications', 'notification' => $noti_count->where(['status' => false])->count()];
+        $this->set(compact('header', 'search', 'notifications', 'user', 'post'));
     }
 
     /**

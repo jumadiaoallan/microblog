@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use Cake\ORM\TableRegistry;
 
 /**
@@ -11,12 +12,13 @@ use Cake\ORM\TableRegistry;
  */
 class LikesController extends AppController
 {
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
+     /**
+      * Index method
+      *
+      * @return \Cake\Http\Response|null|void Renders view
+      */
      // use SoftDeleteTrait;
+
     public function index()
     {
         $likes = $this->paginate($this->Likes);
@@ -47,89 +49,88 @@ class LikesController extends AppController
      */
     public function add()
     {
-      $id = $this->request->getData('value');
-      $post_id = $this->request->getData('post_id');
-      $user_id = $this->request->getData('user_id');
+        $id = $this->request->getData('value');
+        $post_id = $this->request->getData('post_id');
+        $user_id = $this->request->getData('user_id');
 
-      $userLoggedIn = $this->Authentication->getResult()->getData()->id;
+        $userLoggedIn = $this->Authentication->getResult()->getData()->id;
 
-      if ($this->request->is('ajax')) {
-        $like = $this->Likes->find()
-          ->where(['post_id' => $post_id])
-          ->andWhere(['user_id' => $user_id])->toArray();
+        if ($this->request->is('ajax')) {
+            $like = $this->Likes->find()
+            ->where(['post_id' => $post_id])
+            ->andWhere(['user_id' => $user_id])->toArray();
 
-        if (isset($like[0]['id'])) {
-          $like = $this->Likes->find()->where(['post_id' => $post_id, 'user_id'=> $user_id])->first();
-          if ($this->Likes->delete($like)) {
-            $countLike = $this->Likes->find()
+            if (isset($like[0]['id'])) {
+                $like = $this->Likes->find()->where(['post_id' => $post_id, 'user_id' => $user_id])->first();
+                if ($this->Likes->delete($like)) {
+                    $countLike = $this->Likes->find()
                              ->where(['post_id' => $post_id])
                              ->count();
-              echo json_encode(['status'=> 'UNLIKE', 'inserted_id'=> 0, 'count' => $countLike]);
-              exit();
-          }
-        } else {
+                    echo json_encode(['status' => 'UNLIKE', 'inserted_id' => 0, 'count' => $countLike]);
+                    exit;
+                }
+            } else {
+                $unliked = $this->Likes->find('all', ['withDeleted'])->where(['post_id' => $post_id, 'user_id' => $user_id])->first();
 
-          $unliked = $this->Likes->find('all', ['withDeleted'])->where(['post_id' => $post_id, 'user_id'=> $user_id])->first();
+                if (isset($unliked)) {
+                    $data = ['deleted' => null];
+                    $like = $this->Likes->patchEntity($unliked, $data);
+                    $this->Likes->save($like);
 
-          if (isset($unliked)) {
-            $data = ["deleted" => null];
-            $like = $this->Likes->patchEntity($unliked, $data);
-            $this->Likes->save($like);
-
-            //notification
-            $notification = TableRegistry::get("Notifications");
-            $posts = TableRegistry::get("Posts");
-            $userid = $posts->find()->where(['id'=>$this->request->getData("post_id")])->first();
-            $noti = $notification->newEmptyEntity();
-            $data = [
-              "user_id" => $userid->user_id,
-              "user_from" => $user_id,
-              "notification" => "Like on your post.".$post_id,
-              "status" => false
-            ];
-            $noti = $notification->newEntity($data);
-            $notification->save($noti);
-            //end notification
-            $countLike = $this->Likes->find()
+                  //notification
+                    $notification = TableRegistry::get('Notifications');
+                    $posts = TableRegistry::get('Posts');
+                    $userid = $posts->find()->where(['id' => $this->request->getData('post_id')])->first();
+                    $noti = $notification->newEmptyEntity();
+                    $data = [
+                    'user_id' => $userid->user_id,
+                    'user_from' => $user_id,
+                    'notification' => 'Like on your post.' . $post_id,
+                    'status' => false,
+                    ];
+                    $noti = $notification->newEntity($data);
+                    $notification->save($noti);
+                  //end notification
+                    $countLike = $this->Likes->find()
                              ->where(['post_id' => $post_id])
                              ->count();
-            echo json_encode(['status'=> 'LIKE', 'inserted_id'=> 0, 'count' => $countLike]);
-            exit();
-          } else {
-            $like = $this->Likes->newEmptyEntity();
-            $data = [
-              "user_id" => $user_id,
-              "post_id" => $post_id,
-            ];
-            $like = $this->Likes->newEntity($data);
-            if ($this->Likes->save($like)) {
-              $id = $like->id;
+                    echo json_encode(['status' => 'LIKE', 'inserted_id' => 0, 'count' => $countLike]);
+                    exit;
+                } else {
+                    $like = $this->Likes->newEmptyEntity();
+                    $data = [
+                    'user_id' => $user_id,
+                    'post_id' => $post_id,
+                    ];
+                    $like = $this->Likes->newEntity($data);
+                    if ($this->Likes->save($like)) {
+                        $id = $like->id;
 
-              //notification
-              $notification = TableRegistry::get("Notifications");
-              $posts = TableRegistry::get("Posts");
-              $userid = $posts->find()->where(['id'=>$this->request->getData("post_id")])->first();
-              $noti = $notification->newEmptyEntity();
-              $data = [
-                "user_id" => $userid->user_id,
-                "user_from" => $user_id,
-                "notification" => "Like on your post.".$post_id,
-                "status" => false
-              ];
-              $noti = $notification->newEntity($data);
-              $notification->save($noti);
-              //end notification
-              $countLike = $this->Likes->find()
+                      //notification
+                        $notification = TableRegistry::get('Notifications');
+                        $posts = TableRegistry::get('Posts');
+                        $userid = $posts->find()->where(['id' => $this->request->getData('post_id')])->first();
+                        $noti = $notification->newEmptyEntity();
+                        $data = [
+                        'user_id' => $userid->user_id,
+                        'user_from' => $user_id,
+                        'notification' => 'Like on your post.' . $post_id,
+                        'status' => false,
+                        ];
+                        $noti = $notification->newEntity($data);
+                        $notification->save($noti);
+                      //end notification
+                        $countLike = $this->Likes->find()
                                ->where(['post_id' => $post_id])
                                ->count();
-              echo json_encode(['status'=> 'LIKE', 'inserted_id'=> $id, 'count' => $countLike]);
-              exit();
+                        echo json_encode(['status' => 'LIKE', 'inserted_id' => $id, 'count' => $countLike]);
+                        exit;
+                    }
+                }
             }
-          }
+            exit;
         }
-        exit();
-      }
-      exit();
+        exit;
     }
 
     /**

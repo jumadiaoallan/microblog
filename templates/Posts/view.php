@@ -3,20 +3,20 @@
     <table style="width:100%;">
       <tr>
         <?php foreach ($alluser as $userDetail) : ?>
-        <?php if ($userDetail->id == $post->user_id) : ?>
-        <td style=" width:42px;" rowspan="2" class="p-2"><?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'border' => '1', 'width' => '40px')); ?></td>
+            <?php if ($userDetail->id == $post->user_id) : ?>
+        <td style=" width:42px;" rowspan="2" class="p-2"><?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'border' => '1', 'width' => '40px']); ?></td>
         <td>
-          <?= h($userDetail->full_name)?>
+                <?= h($userDetail->full_name)?>
         </td>
-      <?php endif; ?>
-      <?php endforeach; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
         <td class="float-end">
             <sup data-bs-toggle="modal" data-bs-target = "#editPost" data-id="<?=h($post->id)?>" data-post = "<?=h($post->post)?>" data-image="<?=h($post->image_path)?>" style="cursor:pointer;" onclick="editPost(this)">Edit</sup>
             <sup data-bs-toggle="modal" data-bs-target = "#deletePost" data-id="<?=h($post->id)?>" style="cursor:pointer;" onclick="deletePost(this)">Delete</sup>
         </td>
       </tr>
       <tr>
-        <td> <sup><?=  date('m-d-Y H:i A', strtotime(h($post->created))) ?></sup></td>
+        <td> <sup><?= date('m-d-Y H:i A', strtotime(h($post->created))) ?></sup></td>
         <td></td>
       </tr>
     </table>
@@ -25,46 +25,48 @@
     <?= $this->Html->link(
         'Post Description:',
         ['controller' => 'Posts', 'action' => 'view', h($post->id)],
-        ['style' => 'color:inherit;text-decoration:none;']); ?>
+        ['style' => 'color:inherit;text-decoration:none;']
+    ); ?>
     <p style="text-align: justify;"><?= h($post->post) ?></p>
 
     <?php if (!empty($post->shared_post_id)) : ?>
             <?php foreach ($allpost as $shared) : ?>
-
-              <?php if ($post->shared_post_id == $shared->id) : ?>
-                  <?php if ($shared->deleted == null) : ?>
+                <?php if ($post->shared_post_id == $shared->id) : ?>
+                    <?php if ($shared->deleted == null) : ?>
                     <div class="row card p-3" style="background-color:#999999;color:white;">
                       <div class="col-md-12">
                         <table style="width:100%;">
                           <tr>
                             <?php foreach ($alluser as $userDetail) : ?>
-                            <?php if ($userDetail->id == $shared->user_id) : ?>
+                                <?php if ($userDetail->id == $shared->user_id) : ?>
                             <td style=" width:42px;" rowspan="2" class="p-2"><?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'border' => '1', 'width' => '40px']); ?></td>
                             <td>
-                              <?= $this->Html->link(
-                                  h($userDetail->full_name),
-                                  ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)],
-                                  ['style' => 'color:inherit;text-decoration:none;']); ?>
+                                    <?= $this->Html->link(
+                                        h($userDetail->full_name),
+                                        ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)],
+                                        ['style' => 'color:inherit;text-decoration:none;']
+                                    ); ?>
                             </td>
-                          <?php endif; ?>
-                          <?php endforeach; ?>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
                           </tr>
                           <tr>
-                            <td> <sup><?=  date('m-d-Y H:i A', strtotime(h($shared->created))) ?></sup></td>
+                            <td> <sup><?= date('m-d-Y H:i A', strtotime(h($shared->created))) ?></sup></td>
                           </tr>
                         </table>
                       </div>
 
                     <div class="col-md-12">
-                      <?= $this->Html->link(
-                          'Post Description:',
-                          ['controller' => 'Posts', 'action' => 'view', h($shared->id)],
-                          ['style' => 'color:inherit;text-decoration:none;']); ?>
+                        <?= $this->Html->link(
+                            'Post Description:',
+                            ['controller' => 'Posts', 'action' => 'view', h($shared->id)],
+                            ['style' => 'color:inherit;text-decoration:none;']
+                        ); ?>
                       <p style="text-align: justify;"><?= h($shared->post) ?></p>
 
                         <?php if (!empty($shared->image_path)) : ?>
                           <div class="post_photo">
-                          <?= $this->Html->image('post_upload/' . h($shared->image_path), array('alt' => 'Microblog', 'border' => '1', 'class' => 'img-fluid mx-auto d-block')); ?>
+                            <?= $this->Html->image('post_upload/' . h($shared->image_path), ['alt' => 'Microblog', 'border' => '1', 'class' => 'img-fluid mx-auto d-block']); ?>
                           </div>
                         <?php endif; ?>
 
@@ -76,9 +78,9 @@
                            Shared contain is not available.
                         </div>
                       </div>
-                  <?php endif; ?>
+                    <?php endif; ?>
 
-              <?php endif; ?>
+                <?php endif; ?>
 
             <?php endforeach; ?>
     <?php endif; ?>
@@ -86,7 +88,7 @@
 
       <?php if (!empty($post->image_path)) : ?>
         <div class="post_photo">
-        <?= $this->Html->image('post_upload/' . h($post->image_path), ['alt' => 'Microblog', 'border' => '1', 'class' => 'img-fluid mx-auto d-block']); ?>
+            <?= $this->Html->image('post_upload/' . h($post->image_path), ['alt' => 'Microblog', 'border' => '1', 'class' => 'img-fluid mx-auto d-block']); ?>
         </div>
       <?php endif; ?>
 
@@ -99,16 +101,16 @@
         <?php
         $find_user = array_search(h($this->Identity->get('id')), array_column($liked, 'user_id')) + 1;
         $like_user = array_search(h($this->Identity->get('id')), array_column($liked, 'user_id'));
-         ?>
+        ?>
          <?php if (count($liked) != 0) : ?>
-           <?php if ($find_user): ?>
-               <?php if ($post->likes[$like_user]['user_id'] == $this->Identity->get('id')) : ?>
+                <?php if ($find_user) : ?>
+                    <?php if ($post->likes[$like_user]['user_id'] == $this->Identity->get('id')) : ?>
                  UNLIKE (<?= count($liked)?>)
-               <?php else: ?>
+                    <?php else : ?>
                  LIKE (<?= count($liked)?>)
-               <?php endif; ?>
-           <?php endif; ?>
-           <?php else: ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+         <?php else : ?>
              LIKE (<?= count($liked)?>)
          <?php endif; ?>
       </button>
@@ -124,22 +126,23 @@
   <div class="col-md-12">
     <div class="row justify-content-md-center mt-2 p-3 card"  style="background-color:#999999;color:white;">
       <?php if (count($post->comments) != 0) : ?>
-        <?php foreach ($post->comments as $comment) : ?>
+            <?php foreach ($post->comments as $comment) : ?>
           <div class="content" style="display:none;">
             <div class="col-md-12">
               <table style="width:100%;">
                 <tr>
                   <?php foreach ($alluser as $element) : ?>
-                    <?php if ($element->id == $comment->user_id) : ?>
+                        <?php if ($element->id == $comment->user_id) : ?>
                   <td style=" width:42px;" rowspan="2" class="p-2"><?= $this->Html->image('upload/' . h($element->profile_path), ['alt' => 'Microblog', 'border' => '1', 'width' => '40px']); ?></td>
                   <td>
-                    <?= $this->Html->link(
-                        h($element->full_name),
-                        ['controller' => 'Users', 'action' => 'profile', h($element->id)],
-                        ['style' => 'color:inherit;text-decoration:none;']); ?>
+                            <?= $this->Html->link(
+                                h($element->full_name),
+                                ['controller' => 'Users', 'action' => 'profile', h($element->id)],
+                                ['style' => 'color:inherit;text-decoration:none;']
+                            ); ?>
 
-                    <?php endif; ?>
-                     <?php endforeach; ?>
+                        <?php endif; ?>
+                  <?php endforeach; ?>
                   </td>
                   <td class="float-end">
                     <?php if ($this->Identity->get('id') == $comment->user_id) : ?>
@@ -159,8 +162,8 @@
                 <hr>
             </div>
           </div>
-        <?php endforeach; ?>
-        <?php else: ?>
+            <?php endforeach; ?>
+      <?php else : ?>
           <span class="text-center">No Comment</span>
       <?php endif; ?>
       <center>

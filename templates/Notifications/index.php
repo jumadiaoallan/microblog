@@ -5,46 +5,49 @@
           <h3>Notifications</h3>
         </div>
       </div>
-        <?php if ($notifications->count()): ?>
-          <?php foreach ($notifications as $noti): ?>
+        <?php if ($notifications->count()) : ?>
+            <?php foreach ($notifications as $noti) : ?>
             <div class="row mt-2">
               <div class="col-md-12 card" style="background-color:#999999;color:white;">
-                <?php if ($this->Identity->get('id') == $noti->user_id): ?>
-                <?php foreach ($user as $users): ?>
-                      <?php if ($users->id == $noti->user_from): ?>
+                <?php if ($this->Identity->get('id') == $noti->user_id) : ?>
+                    <?php foreach ($user as $users) : ?>
+                        <?php if ($users->id == $noti->user_from) : ?>
                         <table>
                           <tr>
                             <td style=" width:42px;" rowspan="2" class="p-2">
-                              <?= $this->Html->image("upload/".h($users->profile_path), ["alt" => "Microblog", 'width'=>'40px', 'url' => ['controller' => 'Users', 'action' => 'profile', h($users->id)]])?>
+                              <?= $this->Html->image('upload/' . h($users->profile_path), ['alt' => 'Microblog', 'width' => '40px', 'url' => ['controller' => 'Users', 'action' => 'profile', h($users->id)]])?>
                             </td>
                             <td>
                               <?= $this->Html->link(
-                              $users->full_name,
-                              ['controller' => 'Users', 'action' => 'profile', h($users->id)],
-                              ['style' => 'color:inherit;text-decoration:none;']); ?>
-                              <?php $split = explode(".", h($noti->notification)) ?>
-                                <?php if ($split[0] == "Followed you"): ?>
-                                  <?= $this->Html->link(
-                                  h($split[0]). " at " . date("m-d-Y h:i A", strtotime(h($noti->created))),
+                                  $users->full_name,
                                   ['controller' => 'Users', 'action' => 'profile', h($users->id)],
-                                  ['style' => 'color:inherit;text-decoration:none;']); ?>
-                                  <?php else: ?>
+                                  ['style' => 'color:inherit;text-decoration:none;']
+                              ); ?>
+                              <?php $split = explode('.', h($noti->notification)) ?>
+                                <?php if ($split[0] == 'Followed you') : ?>
                                     <?= $this->Html->link(
-                                    h($split[0]). " at " . date("m-d-Y h:i A", strtotime(h($noti->created))),
-                                    ['controller' => 'Posts', 'action' => 'view', h($split[1])],
-                                    ['style' => 'color:inherit;text-decoration:none;']); ?>
+                                        h($split[0]) . ' at ' . date('m-d-Y h:i A', strtotime(h($noti->created))),
+                                        ['controller' => 'Users', 'action' => 'profile', h($users->id)],
+                                        ['style' => 'color:inherit;text-decoration:none;']
+                                    ); ?>
+                                <?php else : ?>
+                                      <?= $this->Html->link(
+                                          h($split[0]) . ' at ' . date('m-d-Y h:i A', strtotime(h($noti->created))),
+                                          ['controller' => 'Posts', 'action' => 'view', h($split[1])],
+                                          ['style' => 'color:inherit;text-decoration:none;']
+                                      ); ?>
                                 <?php endif; ?>
                             </td>
                           </tr>
                         </table>
-                    <?php endif; ?>
-                <?php endforeach; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                 <?php endif; ?>
               </div>
             </div>
             <hr>
-          <?php endforeach; ?>
-          <?php else: ?>
+            <?php endforeach; ?>
+        <?php else : ?>
             <div class=" justify-content-md-center mt-3 card p-3"  style="background-color:#999999;color:white;">
               <div class="col-md-12 text-center">
                 No Latest Notifications

@@ -23,11 +23,7 @@
 
     <?= $this->fetch('content') ?>
   </div>
-  <?php
-
-      echo $this->Flash->render();
-
-   ?>
+  <?php echo $this->Flash->render();?>
 
 </div>
 

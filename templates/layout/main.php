@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <?= $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')) ?>
-<?= $this->Html->meta('img','img/icon.PNG',['type' => 'icon']) ?>
+<?= $this->Html->meta('img', 'img/icon.PNG', ['type' => 'icon']) ?>
 <title><?= $header['title']?></title>
 <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css') ?>
 <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css') ?>
@@ -20,11 +20,7 @@
 </div>
 
 <div class="container">
-  <?php
-
-      echo $this->Flash->render();
-
-   ?>
+    <?php echo $this->Flash->render();?>
     <?= $this->fetch('content') ?>
 </div>
 

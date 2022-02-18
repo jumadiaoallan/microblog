@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use Cake\ORM\TableRegistry;
 
 /**
@@ -51,28 +52,27 @@ class CommentsController extends AppController
         if ($this->request->is('ajax')) {
             $comment = $this->Comments->patchEntity($comment, $this->request->getData());
             if ($this->Comments->save($comment)) {
-
               //notification
-              $notification = TableRegistry::get("Notifications");
-              $posts = TableRegistry::get("Posts");
-              $userid = $posts->find()->where(['id'=>$this->request->getData("post_id")])->first();
-              $noti = $notification->newEmptyEntity();
-              $data = [
-                "user_id" => $userid->user_id,
-                "user_from" => $this->request->getData("user_id"),
-                "notification" => "Comment on your post.".$this->request->getData("post_id"),
-                "status" => false
-              ];
-              $noti = $notification->newEntity($data);
-              $notification->save($noti);
+                $notification = TableRegistry::get('Notifications');
+                $posts = TableRegistry::get('Posts');
+                $userid = $posts->find()->where(['id' => $this->request->getData('post_id')])->first();
+                $noti = $notification->newEmptyEntity();
+                $data = [
+                'user_id' => $userid->user_id,
+                'user_from' => $this->request->getData('user_id'),
+                'notification' => 'Comment on your post.' . $this->request->getData('post_id'),
+                'status' => false,
+                ];
+                $noti = $notification->newEntity($data);
+                $notification->save($noti);
               //end notification
 
-                echo "success";
+                echo 'success';
             } else {
-              echo "failed";
+                echo 'failed';
             }
         }
-        exit();
+        exit;
     }
 
     /**
@@ -91,8 +91,10 @@ class CommentsController extends AppController
             $comment = $this->Comments->patchEntity($comment, $this->request->getData());
             if ($this->Comments->save($comment)) {
                 $this->Flash->success(__('The comment has been saved.'));
+
                 return $this->redirect($this->referer());
             }
+
             return $this->redirect($this->referer());
         }
         $this->set(compact('comment'));
@@ -111,15 +113,15 @@ class CommentsController extends AppController
         $comment = $this->Comments->get($id);
         if ($this->Comments->delete($comment)) {
             $this->Flash->success(__('The comment has been deleted.'));
-            echo json_encode(['massage'=>'success']);
-            exit();
+            echo json_encode(['massage' => 'success']);
+            exit;
         } else {
             $this->Flash->error(__('Something went wrong, please try again.'));
-          echo json_encode(['massage'=>'failed']);
-          exit();;
+            echo json_encode(['massage' => 'failed']);
+            exit;
         }
         $this->Flash->error(__('Something went wrong, please try again.'));
-        echo json_encode(['massage'=>'error']);
-        exit();;
+        echo json_encode(['massage' => 'error']);
+        exit;
     }
 }

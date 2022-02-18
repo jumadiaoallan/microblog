@@ -6,7 +6,7 @@
   <div class="col-md-12">
     <table>
       <tr>
-        <td rowspan="2" class="p-2"><?= $this->Html->image('icon.PNG', array('alt' => 'Microblog', 'border' => '1', 'width'=>'40px')); ?></td>
+        <td rowspan="2" class="p-2"><?= $this->Html->image('icon.PNG', ['alt' => 'Microblog', 'border' => '1', 'width' => '40px']); ?></td>
         <td>John Doe</td>
       </tr>
       <tr>
@@ -18,7 +18,7 @@
     <span class="text-red">Post Description: </span>
     <p style="text-align: justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     <span>
-      <?= $this->Html->image('logo.PNG', array('alt' => 'Microblog', 'border' => '1', 'width'=>'300px', 'class'=> 'img-fluid mx-auto d-block')); ?>
+      <?= $this->Html->image('logo.PNG', ['alt' => 'Microblog', 'border' => '1', 'width' => '300px', 'class' => 'img-fluid mx-auto d-block']); ?>
     </span>
   </div>
   <div class="col-md-12">
@@ -39,7 +39,7 @@
       <div class="col-md-6">
         <table>
           <tr>
-            <td rowspan="2" class="p-2"><?= $this->Html->image('icon.PNG', array('alt' => 'Microblog', 'border' => '1', 'width'=>'40px')); ?></td>
+            <td rowspan="2" class="p-2"><?= $this->Html->image('icon.PNG', ['alt' => 'Microblog', 'border' => '1', 'width' => '40px']); ?></td>
             <td>Juan Dela Cruz</td>
           </tr>
           <tr>
@@ -101,7 +101,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($users as $user): ?>
+                <?php foreach ($users as $user) : ?>
                 <tr>
                     <td><?= $this->Number->format($user->id) ?></td>
                     <td><?= h($user->username) ?></td>
