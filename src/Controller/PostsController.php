@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use Cake\ORM\TableRegistry;
 
 /**
@@ -18,7 +19,6 @@ class PostsController extends AppController
      */
     public function index($page = null)
     {
-
         $this->viewBuilder()->setLayout('main');
         $userPost = TableRegistry::get('Posts');
         $userDetails = TableRegistry::get('Users');
@@ -27,15 +27,15 @@ class PostsController extends AppController
         $logged = $this->Authentication->getResult();
         $loggedID = $logged->getData();
 
-        if (!empty($loggedID)) {
-          $id = $loggedID['id'];
-        } else {
-          $id = 0;
-        }
+          if (!empty($loggedID)) {
+            $id = $loggedID['id'];
+          } else {
+            $id = 0;
+          }
 
         $notification = $noti->find()
                       ->where(['user_id' => $id])
-                      ->andWhere(['status'=>FALSE])
+                      ->andWhere(['status' => false])
                       ->andWhere(['user_from !=' => $id])
                       ->count();
         $post = $userPost->newEmptyEntity();
@@ -47,19 +47,22 @@ class PostsController extends AppController
                      ->where(['follower_user' => $loggedID['id']]);
 
         $arr = [$loggedID['id']];
+
         foreach ($followings as $following) {
-          $param = $following->following_user;
-          array_push($arr, $param);
+
+            $param = $following->following_user;
+            array_push($arr, $param);
+
         }
 
           $users = $userPost->find()
-            ->contain(['Comments','Likes'])
+            ->contain(['Comments', 'Likes'])
             ->order(['Posts.created' => 'DESC'])
             ->where(['Posts.user_id IN' => $arr]);
 
-        $user = $this->paginate($users, ['limit'=>'5']);
-        $header = ["title"=>"Homepage", "notification"=>$notification];
-        $this->set(compact('header','post','search','user', 'detail', 'alluser', 'allpost'));
+        $user = $this->paginate($users, ['limit' => '5']);
+        $header = ['title' => 'Homepage', 'notification' => $notification];
+        $this->set(compact('header', 'post', 'search', 'user', 'detail', 'alluser', 'allpost'));
     }
 
     /**
@@ -75,7 +78,7 @@ class PostsController extends AppController
           $userDetails = TableRegistry::get('Users');
           $post = $this->Posts->get($id, ['contain' => ['Likes', 'Comments'],]);
           $alluser = $userDetails->find('all')->toArray();
-          echo json_encode(['post'=> $post, 'users'=> $alluser]);
+          echo json_encode(['post' => $post, 'users' => $alluser]);
           exit();
         } else {
           $this->viewBuilder()->setLayout('main');
@@ -85,11 +88,11 @@ class PostsController extends AppController
           $noti = TableRegistry::get('Notifications');
           $notification = $noti->find()
                         ->where(['user_id' => $loggedID['id']])
-                        ->andWhere(['status'=>FALSE])
+                        ->andWhere(['status' => false])
                         ->andWhere(['user_from !=' => $loggedID['id']])
                         ->count();
 
-          $header = ["title"=>"View Post", "notification"=>$notification];
+          $header = ['title' => 'View Post', 'notification' => $notification];
           $userDetails = TableRegistry::get('Users');
           $search = $userDetails->newEmptyEntity();
           $userPost = TableRegistry::get('Posts');
@@ -99,7 +102,7 @@ class PostsController extends AppController
 
           $alluser = $userDetails->find('all')->toArray();
 
-          $this->set(compact('post','header', 'search','alluser', 'allpost'));
+          $this->set(compact('post', 'header', 'search', 'alluser', 'allpost'));
         }
     }
 
@@ -112,34 +115,36 @@ class PostsController extends AppController
     {
       $post = $this->Posts->newEmptyEntity();
 
-      if ($this->request->is('post')) {
-        $postTable = TableRegistry::get('Posts');
-        $image = $this->request->getData('image_post');
-        if (!empty($image->getClientFilename())) {
+        if ($this->request->is('post')) {
+          $postTable = TableRegistry::get('Posts');
           $image = $this->request->getData('image_post');
-          $fileName = time()."_".$image->getClientFilename();
-          $path = WWW_ROOT.'img'.DS."post_upload/".$fileName;
-          $image->moveTo($path);
-        } else {
-          $fileName = null;
-        }
+          if (!empty($image->getClientFilename())) {
+            $image = $this->request->getData('image_post');
+            $fileName = time() . '_' . $image->getClientFilename();
+            $path = WWW_ROOT . 'img' . DS . 'post_upload/' . $fileName;
+            $image->moveTo($path);
+          } else {
+            $fileName = null;
+          }
 
         $usersLogedin = $this->Authentication->getResult();
         $logged = $usersLogedin->getData();
 
         $data = [
-          'user_id'        => $logged['id'],
-          'image_path'     => $fileName,
-          'post'           => $this->request->getData('post'),
+          'user_id' => $logged['id'],
+          'image_path' => $fileName,
+          'post' => $this->request->getData('post'),
         ];
         $post = $postTable->patchEntity($post, $data);
-        if ($this->Posts->save($post)) {
-          $this->Flash->success(__('Successfully Posted!'));
-          $this->redirect($this->referer());
-        } else {
-          $this->Flash->error(__('Something wrong. Please, try again.'));
-          $this->redirect($this->referer());
-        }
+          if ($this->Posts->save($post)) {
+            $this->Flash->success(__('Successfully Posted!'));
+
+            return $this->redirect($this->referer());
+          } else {
+            $this->Flash->error(__('Something wrong. Please, try again.'));
+
+            return $this->redirect($this->referer());
+          }
       }
       $this->set(compact('post'));
     }
@@ -156,37 +161,39 @@ class PostsController extends AppController
         $post = $this->Posts->get($id, [
             'contain' => [],
         ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-          $image = $this->request->getData('image_post');
-
-          if (!empty($image->getClientFilename())) {
+          if ($this->request->is(['patch', 'post', 'put'])) {
             $image = $this->request->getData('image_post');
-            $fileName = $image->getClientFilename();
-            $path = WWW_ROOT.'img'.DS."post_upload/".$fileName;
-            $image->moveTo($path);
-          } else {
-            $fileName = null;
-          }
 
-          $data = [
-            'image_path'      => $fileName,
-            'post'            => $this->request->getData('post'),
-          ];
+            if (!empty($image->getClientFilename())) {
+              $image = $this->request->getData('image_post');
+              $fileName = $image->getClientFilename();
+              $path = WWW_ROOT . 'img' . DS . 'post_upload/' . $fileName;
+              $image->moveTo($path);
+            } else {
+              $fileName = null;
+            }
 
-          $post = $this->Posts->patchEntity($post, $data);
+            $data = [
+              'image_path' => $fileName,
+              'post' => $this->request->getData('post'),
+            ];
 
-          if ($this->Posts->save($post)) {
-            $this->Flash->success(__('The Post has been saved.'));
-            return $this->redirect($this->referer());
+            $post = $this->Posts->patchEntity($post, $data);
+
+              if ($this->Posts->save($post)) {
+                $this->Flash->success(__('The Post has been saved.'));
+
+                return $this->redirect($this->referer());
+              } else {
+                $this->Flash->error(__('Something wrong. Please, try again.'));
+
+                return $this->redirect($this->referer());
+              }
           } else {
             $this->Flash->error(__('Something wrong. Please, try again.'));
+
             return $this->redirect($this->referer());
           }
-        } else {
-          $this->Flash->error(__('Something wrong. Please, try again.'));
-          return $this->redirect($this->referer());
-        }
-
     }
 
     /**
@@ -200,13 +207,15 @@ class PostsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $post = $this->Posts->get($id);
-        if ($this->Posts->delete($post)) {
-            $this->Flash->success(__('The post has been deleted.'));
-            return $this->redirect($this->referer());
-        } else {
-            $this->Flash->error(__('The post could not be deleted. Please, try again.'));
-            return $this->redirect($this->referer());
-        }
+          if ($this->Posts->delete($post)) {
+              $this->Flash->success(__('The post has been deleted.'));
+
+              return $this->redirect($this->referer());
+          } else {
+              $this->Flash->error(__('The post could not be deleted. Please, try again.'));
+
+              return $this->redirect($this->referer());
+          }
 
         return $this->redirect($this->referer());
     }
@@ -214,37 +223,36 @@ class PostsController extends AppController
     public function share()
     {
       $post = $this->Posts->newEmptyEntity();
-      if ($this->request->is('post')) {
-        $data = [
-          'user_id' => $this->request->getData('user_id'),
-          'post' => $this->request->getData('post'),
-          'shared_post_id' => $this->request->getData('post_id'),
-        ];
-        $post = $this->Posts->newEntity($data);
-        if ($this->Posts->save($post)) {
-          $this->Flash->success(__('The post has been shared.'));
-
-          //notification
-          $notification = TableRegistry::get("Notifications");
-          $posts = TableRegistry::get("Posts");
-          $userid = $posts->find()->where(['id'=>$this->request->getData("post_id")])->first();
-          $noti = $notification->newEmptyEntity();
+        if ($this->request->is('post')) {
           $data = [
-            "user_id" => $userid->user_id,
-            "user_from" => $this->request->getData('user_id'),
-            "notification" => "Shared on your post.".$post->id,
-            "status" => false
+            'user_id' => $this->request->getData('user_id'),
+            'post' => $this->request->getData('post'),
+            'shared_post_id' => $this->request->getData('post_id'),
           ];
-          $noti = $notification->newEntity($data);
-          $notification->save($noti);
-          //end notification
+          $post = $this->Posts->newEntity($data);
+            if ($this->Posts->save($post)) {
+              $this->Flash->success(__('The post has been shared.'));
 
+              //notification
+              $notification = TableRegistry::get('Notifications');
+              $posts = TableRegistry::get('Posts');
+              $userid = $posts->find()->where(['id' => $this->request->getData("post_id")])->first();
+              $noti = $notification->newEmptyEntity();
+              $data = [
+                'user_id' => $userid->user_id,
+                'user_from' => $this->request->getData('user_id'),
+                'notification' => 'Shared on your post.' . $post->id,
+                'status' => false,
+              ];
+              $noti = $notification->newEntity($data);
+              $notification->save($noti);
+              //end notification
 
-          return $this->redirect($this->referer());
-        } else {
-          return $this->redirect($this->referer());
+              return $this->redirect($this->referer());
+            } else {
+
+              return $this->redirect($this->referer());
+            }
         }
-      }
     }
-
 }
