@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -115,6 +116,7 @@ class PostsController extends AppController
 
         if ($this->request->is('post')) {
             $postTable = TableRegistry::get('Posts');
+
             $image = $this->request->getData('image_post');
             if (!empty($image->getClientFilename())) {
                 $image = $this->request->getData('image_post');

@@ -100,11 +100,7 @@ function addcomment(data) {
             },
             success: function(result) {
               var pageURL = $(location).attr("pathname");
-              console.log(pageURL);
-              console.log(pageURL.slice(0,-2));
-              console.log(pageURL.slice(0,-3));
-              console.log(pageURL.slice(0,-4));
-              if (pageURL.slice(0,-2) == "/posts/view") {
+              if (pageURL.substring(0, 11) == "/posts/view") {
                 location.reload();
               } else {
                 $('#comment_section').load(location.href + "#comment_section");
