@@ -100,7 +100,7 @@ function addcomment(data) {
             },
             success: function(result) {
               var pageURL = $(location).attr("pathname");
-              console.log();
+              console.log(pageURL);
               if (pageURL.slice(0,-2) == "/posts/view") {
                 location.reload();
               } else {
