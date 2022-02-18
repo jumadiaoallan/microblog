@@ -130,24 +130,28 @@ class UsersController extends AppController
             ];
             $user = $userTable->newEntity($data);
 
-            $this->Flash->success(__('Register successful, Please see email for verification.'));
-            $mailer = new Mailer('default');
-            $mailer->setFrom(['allanjumadiao.yns@gmail.com' => 'John Doe']);
-            $mailer->setViewVars(['full_name' => $full_name,'token' => $activation_token])
-            ->setTo($email)
-            ->setEmailFormat('html')
-            ->setSubject('Verify New Account')
-            ->viewBuilder()
-              ->setTemplate('default')
-              ->setLayout('default');
+            if ($userTable->save($user)) {
+                $this->Flash->success(__('Register successful, Please see email for verification.'));
 
-            if ($mailer->deliver()) {
-                if ($userTable->save($user)) {
-                    return $this->redirect(['action' => 'login']);
-                } else {
-                    $this->Flash->error(__('Registration failed, please try again.'));
-                }
+                $mailer = new Mailer('default');
+                $mailer->setFrom(['allanjumadiao.yns@gmail.com' => 'John Doe']);
+                $mailer->setViewVars(['full_name' => $full_name,'token' => $activation_token])
+                ->setTo($email)
+                ->setEmailFormat('html')
+                ->setSubject('Verify New Account')
+                ->viewBuilder()
+                  ->setTemplate('default')
+                  ->setLayout('default');
+                $mailer->deliver();
+
+                return $this->redirect(['action' => 'login']);
+            } else {
+                $this->Flash->error(__('Registration failed, please try again.'));
             }
+
+
+
+
         }
         $this->set(compact('user', 'title'));
     }
