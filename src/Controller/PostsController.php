@@ -142,6 +142,10 @@ class PostsController extends AppController
                 return $this->redirect($this->referer());
             } else {
                 $this->Flash->error(__('Something wrong. Please, try again.'));
+                $this->Flash->error('Invalid Image Format', [
+                    'key' => 'invalid',
+                    'clear' => true,
+                ]);
 
                 return $this->redirect($this->referer());
             }

@@ -84,3 +84,19 @@
   <?= $this->element('modal') ?>
 
   <?= $this->Html->script('photo_viewer');?>
+
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+
+        <?php
+
+          if (!empty($this->Flash->render('invalid-image'))) {
+            echo '$("#item-error").modal("show");';
+          }
+
+         ?>
+
+
+    });
+</script>

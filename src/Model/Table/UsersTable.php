@@ -152,6 +152,7 @@ class UsersTable extends Table
             ->add('profile_path', [
               'extension' => [
                 'rule' => ['extension', ['gif', 'png', 'jpg', 'jpeg']],
+                'allowEmpty' => false,
                 'message' => 'Please upload only jpg, jpeg or png',
               ]
             ]);

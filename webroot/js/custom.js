@@ -81,7 +81,7 @@ function addcomment(data) {
       var comment_id = "comment_"+post_id;
       var comment = document.getElementById(comment_id).value;
       if(comment.length == 0){
-          $('#'+comment_id).after('<div class="red">Comment is Required</div>');
+          $('#'+comment_id).after('<div style="font-size:12px;color:red;">Comment is Required</div>');
       }
       else {
           $('#'+comment_id).next(".red").remove();

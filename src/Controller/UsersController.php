@@ -207,6 +207,7 @@ class UsersController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             if ($this->request->getData('update_profile')->getClientFilename() == '') {
+
                 return $this->redirect($this->referer());
             }
 
@@ -219,11 +220,15 @@ class UsersController extends AppController
               $image->moveTo($path);
 
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The profile has been updated.'));
+                $this->Flash->success(__('The profile photo has been updated.'));
 
                 return $this->redirect($this->referer());
             }
-              $this->Flash->error(__('The profile could not be saved. Please, try again.'));
+              $this->Flash->error(__('The profile photo could not be saved. Please, try again.'));
+              $this->Flash->error('Invalid Image Format', [
+                  'key' => 'invalid-image',
+                  'clear' => true,
+              ]);
 
               return $this->redirect($this->referer());
         }
@@ -236,6 +241,11 @@ class UsersController extends AppController
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
+          if ($this->request->getData('update_banner')->getClientFilename() == '') {
+
+              return $this->redirect($this->referer());
+          }
+
             $image = $this->request->getData('update_banner');
             $fileName = time() . '_' . $image->getClientFilename();
             $data = ['banner_path' => $fileName];
@@ -244,11 +254,15 @@ class UsersController extends AppController
             $path = WWW_ROOT . 'img' . DS . 'upload/' . $fileName;
             $image->moveTo($path);
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The Banner has been saved.'));
+                $this->Flash->success(__('The banner photo has been saved.'));
 
                 return $this->redirect($this->referer());
             }
-              $this->Flash->error(__('The Banner could not be saved. Please, try again.'));
+              $this->Flash->error(__('The banner photo could not be saved. Please, try again.'));
+              $this->Flash->error('Invalid Image Format', [
+                  'key' => 'invalid-image',
+                  'clear' => true,
+              ]);
 
               return $this->redirect($this->referer());
         }

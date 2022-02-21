@@ -1,4 +1,32 @@
 <?php $userID = h($this->Identity->get('id'))?>
+
+<div class = "modal" id ="item-error">
+  <div class="modal-dialog modal-dialog-centered" >
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header" style="background-color:#7f7f7f;">
+        <?php if ($this->Identity->get('id') == $detail['id']) : ?>
+          <h4 class="modal-title">Image Error!</h4>
+        <?php endif; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body"  style="background-color:#7f7f7f;">
+        <div class="row">
+          <div class="col-md-12 text-white">
+            Please upload only jpg, jpeg or png.
+          </div>
+        </div>
+      </div>
+        <!-- Modal footer -->
+        <div class="modal-footer"  style="background-color:#7f7f7f;">
+            <button type="button" class="form-control btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+
 <div class = "modal" id ="profiles">
   <div class="modal-dialog modal-dialog-centered" >
     <div class="modal-content">
@@ -11,17 +39,17 @@
       </div>
       <!-- Modal body -->
       <div class="modal-body"  style="background-color:#7f7f7f;">
-        <?php if ($this->Identity->get('id') == $detail['id']) : ?>
+        <?php if ($userID == $detail['id']) : ?>
             <?= $this->Form->create($photo, ['url' => ['controller' => 'Users', 'action' => 'profilepic', $userID], 'type' => 'file']) ?>
         <?php endif; ?>
         <center>
         <?=$this->Html->image('upload/' . h($detail['profile_path']), ['class' => 'img-fluid', 'id' => 'profile']);?>
         </center>
-        <?php if ($this->Identity->get('id') == $detail['id']) : ?>
+        <?php if ($userID == $detail['id']) : ?>
             <?= $this->Form->control('update_profile', ['type' => 'file', 'class' => 'form-control mt-2', 'id' => 'imgInp', 'accept' => 'image/png, image/jpg, image/jpeg']) ?>
         <?php endif; ?>
       </div>
-      <?php if ($this->Identity->get('id') == $detail['id']) : ?>
+      <?php if ($userID == $detail['id']) : ?>
         <!-- Modal footer -->
         <div class="modal-footer"  style="background-color:#7f7f7f;">
             <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
@@ -40,7 +68,7 @@
 
       <!-- Modal Header -->
       <div class="modal-header" style="background-color:#7f7f7f;">
-        <?php if ($this->Identity->get('id') == $detail['id']) : ?>
+        <?php if ($userID == $detail['id']) : ?>
           <h4 class="modal-title">Edit Banner Photo</h4>
         <?php endif; ?>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -48,18 +76,18 @@
 
       <!-- Modal body -->
       <div class="modal-body"  style="background-color:#7f7f7f;">
-        <?php if ($this->Identity->get('id') == $detail['id']) : ?>
+        <?php if ($userID == $detail['id']) : ?>
             <?= $this->Form->create($photo, ['url' => ['controller' => 'Users', 'action' => 'banner', $userID], 'type' => 'file']) ?>
         <?php endif; ?>
 
         <center>
         <?= $this->Html->image('upload/' . h($detail['banner_path']), ['alt' => 'Banner', 'class' => 'img-fluid', 'id' => 'banners']); ?>
         </center>
-        <?php if ($this->Identity->get('id') == $detail['id']) : ?>
+        <?php if ($userID == $detail['id']) : ?>
             <?= $this->Form->control('update_banner', ['type' => 'file', 'class' => 'form-control mt-2', 'id' => 'imgInpbanner' ,'accept' => 'image/png, image/jpg, image/jpeg']) ?>
         <?php endif; ?>
       </div>
-      <?php if (h($this->Identity->get('id')) == h($detail['id'])) : ?>
+      <?php if ($userID == h($detail['id'])) : ?>
         <div class="modal-footer"  style="background-color:#7f7f7f;">
             <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
             <?= $this->Form->end() ?>
