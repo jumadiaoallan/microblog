@@ -364,7 +364,7 @@ class UsersController extends AppController
                 $data = [
                 'full_name' => $this->request->getData('full_name'),
                 'username' => $this->request->getData('username'),
-                'age' => $this->request->getData('age'),
+                'birthday' => $this->request->getData('birthday'),
                 'gender' => $this->request->getData('gender'),
                 'modified' => $now,
                 ];
@@ -372,7 +372,7 @@ class UsersController extends AppController
                 $data = [
                 'full_name' => $this->request->getData('full_name'),
                 'username' => $this->request->getData('username'),
-                'age' => $this->request->getData('age'),
+                'birthday' => $this->request->getData('birthday'),
                 'gender' => $this->request->getData('gender'),
                 'password' => $this->request->getData('password'),
                 'confirm_password' => $this->request->getData('confirm_password'),
