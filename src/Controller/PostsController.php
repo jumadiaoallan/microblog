@@ -124,7 +124,7 @@ class PostsController extends AppController
             $image = $this->request->getData('image_post');
 
             if (empty($this->request->getData('post')) && $image->getClientFilename() == '') {
-                $this->Flash->error(__('Something wrong. Please, try again.'));
+                $this->Flash->error(__('Something wrong. Please try again.'));
                 $this->Flash->error('Empty Post', [
                 'key' => 'empty-post',
                 'clear' => true,
@@ -180,7 +180,7 @@ class PostsController extends AppController
 
                 return $this->redirect($this->referer());
             } else {
-                $this->Flash->error(__('Something wrong. Please, try again.'));
+                $this->Flash->error(__('Something wrong. Please try again.'));
 
                   $this->Flash->error('Invalid Image Format', [
                       'key' => 'invalid',
@@ -207,7 +207,7 @@ class PostsController extends AppController
               'contain' => [],
             ]);
         } catch (\Exception $e) {
-            $this->Flash->error(__('Something wrong. Please, try again.'));
+            $this->Flash->error(__('Something wrong. Please try again.'));
 
             return $this->redirect($this->referer());
         }
@@ -215,7 +215,7 @@ class PostsController extends AppController
         $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         $userLoggedIn = $this->Authentication->getResult()->getData()->id;
         if ($post->user_id != $userLoggedIn) {
-            $this->Flash->error(__('Something wrong. Please, try again.'));
+            $this->Flash->error(__('Something wrong. Please try again.'));
 
             return $this->redirect($this->referer());
         }
@@ -270,12 +270,12 @@ class PostsController extends AppController
 
                 return $this->redirect($this->referer());
             } else {
-                $this->Flash->error(__('Something wrong. Please, try again.'));
+                $this->Flash->error(__('Something wrong. Please try again.'));
 
                 return $this->redirect($this->referer());
             }
         } else {
-            $this->Flash->error(__('Something wrong. Please, try again.'));
+            $this->Flash->error(__('Something wrong. Please try again.'));
 
             return $this->redirect($this->referer());
         }
@@ -295,14 +295,14 @@ class PostsController extends AppController
         try {
             $post = $this->Posts->get($id);
         } catch (\Exception $e) {
-            $this->Flash->error(__('Something wrong. Please, try again.'));
+            $this->Flash->error(__('Something wrong. Please try again.'));
 
             return $this->redirect($this->referer());
         }
 
         $userLoggedIn = $this->Authentication->getResult()->getData()->id;
         if ($post->user_id != $userLoggedIn) {
-            $this->Flash->error(__('Something wrong. Please, try again.'));
+            $this->Flash->error(__('Something wrong. Please try again.'));
 
             return $this->redirect($this->referer());
         }
