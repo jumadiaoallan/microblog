@@ -97,7 +97,11 @@ class PostsController extends AppController
             $userPost = TableRegistry::get('Posts');
             $allpost = $userPost->find('all', ['withDeleted'])->toArray();
 
-            $post = $this->Posts->get($id, ['contain' => ['Likes', 'Comments'],]);
+            try {
+                $post = $this->Posts->get($id, ['contain' => ['Likes', 'Comments'],]);
+            } catch (\Exception $e) {
+                return $this->redirect(['controller' => 'Posts', 'action' => '/']);
+            }
 
             $alluser = $userDetails->find('all')->toArray();
 
@@ -116,10 +120,33 @@ class PostsController extends AppController
 
         if ($this->request->is('post')) {
             $postTable = TableRegistry::get('Posts');
-
+            $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
             $image = $this->request->getData('image_post');
+
+            if (empty($this->request->getData('post')) && $image->getClientFilename() == '') {
+                $this->Flash->error(__('Something wrong. Please, try again.'));
+                $this->Flash->error('Empty Post', [
+                'key' => 'empty-post',
+                'clear' => true,
+                ]);
+
+                return $this->redirect($this->referer());
+            }
+
             if (!empty($image->getClientFilename())) {
                 $image = $this->request->getData('image_post');
+
+                $imageSize = $image->getSize() * 0.000001;
+
+                if ($imageSize >= 5) {
+                    $this->Flash->error('Too Large', [
+                        'key' => 'large-image',
+                        'clear' => true,
+                    ]);
+
+                    return $this->redirect($this->referer());
+                }
+
                 $fileName = time() . '_' . $image->getClientFilename();
                 $path = WWW_ROOT . 'img' . DS . 'post_upload/' . $fileName;
                 $image->moveTo($path);
@@ -129,12 +156,24 @@ class PostsController extends AppController
 
             $usersLogedin = $this->Authentication->getResult();
             $logged = $usersLogedin->getData();
+            if (empty($this->request->getData('post')) && $image->getClientFilename() != '') {
+                $data = [
+                'user_id' => $logged['id'],
+                'image_path' => $fileName,
+                'post' => ' ',
+                'created' => $now,
+                'modified' => $now,
+                ];
+            } else {
+                $data = [
+                'user_id' => $logged['id'],
+                'image_path' => $fileName,
+                'post' => $this->request->getData('post'),
+                'created' => $now,
+                'modified' => $now,
+                ];
+            }
 
-            $data = [
-            'user_id' => $logged['id'],
-            'image_path' => $fileName,
-            'post' => $this->request->getData('post'),
-            ];
             $post = $postTable->patchEntity($post, $data);
             if ($this->Posts->save($post)) {
                 $this->Flash->success(__('Successfully Posted!'));
@@ -142,10 +181,11 @@ class PostsController extends AppController
                 return $this->redirect($this->referer());
             } else {
                 $this->Flash->error(__('Something wrong. Please, try again.'));
-                $this->Flash->error('Invalid Image Format', [
-                    'key' => 'invalid',
-                    'clear' => true,
-                ]);
+
+                  $this->Flash->error('Invalid Image Format', [
+                      'key' => 'invalid',
+                      'clear' => true,
+                  ]);
 
                 return $this->redirect($this->referer());
             }
@@ -162,25 +202,66 @@ class PostsController extends AppController
      */
     public function edit($id = null)
     {
-        $post = $this->Posts->get($id, [
-            'contain' => [],
-        ]);
+        try {
+            $post = $this->Posts->get($id, [
+              'contain' => [],
+            ]);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Something wrong. Please, try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
+        $userLoggedIn = $this->Authentication->getResult()->getData()->id;
+        if ($post->user_id != $userLoggedIn) {
+            $this->Flash->error(__('Something wrong. Please, try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $image = $this->request->getData('image_post');
 
+            if ($image->getClientFilename() == '' && $this->request->getData('post') == null && $this->request->getData('remove_image') != null) {
+                $this->Flash->error(__('Post field for edit should not empty.'));
+
+                return $this->redirect($this->referer());
+            }
+
             if (!empty($image->getClientFilename())) {
+                $imageSize = $image->getSize() * 0.000001;
+
+                if ($imageSize >= 5) {
+                    $this->Flash->error('Image should only below 5MB.');
+
+                    return $this->redirect($this->referer());
+                }
+
                 $image = $this->request->getData('image_post');
                 $fileName = $image->getClientFilename();
                 $path = WWW_ROOT . 'img' . DS . 'post_upload/' . $fileName;
                 $image->moveTo($path);
-            } else {
-                $fileName = null;
-            }
 
-            $data = [
-            'image_path' => $fileName,
-            'post' => $this->request->getData('post'),
-            ];
+                $data = [
+                'image_path' => $fileName,
+                'post' => $this->request->getData('post'),
+                'modified' => $now,
+                ];
+            } else {
+                if (!empty($this->request->getData('remove_image'))) {
+                    $data = [
+                    'post' => $this->request->getData('post'),
+                    'image_path' => null,
+                    'modified' => $now,
+                    ];
+                } else {
+                    $data = [
+                    'post' => $this->request->getData('post'),
+                    'modified' => $now,
+                    ];
+                }
+            }
 
             $post = $this->Posts->patchEntity($post, $data);
 
@@ -210,7 +291,22 @@ class PostsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $post = $this->Posts->get($id);
+
+        try {
+            $post = $this->Posts->get($id);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Something wrong. Please, try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
+        $userLoggedIn = $this->Authentication->getResult()->getData()->id;
+        if ($post->user_id != $userLoggedIn) {
+            $this->Flash->error(__('Something wrong. Please, try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
         if ($this->Posts->delete($post)) {
             $this->Flash->success(__('The post has been deleted.'));
 
@@ -227,11 +323,14 @@ class PostsController extends AppController
     public function share()
     {
         $post = $this->Posts->newEmptyEntity();
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         if ($this->request->is('post')) {
             $data = [
             'user_id' => $this->request->getData('user_id'),
             'post' => $this->request->getData('post'),
             'shared_post_id' => $this->request->getData('post_id'),
+            'created' => $now,
+            'modified' => $now,
             ];
             $post = $this->Posts->newEntity($data);
             if ($this->Posts->save($post)) {
@@ -247,6 +346,8 @@ class PostsController extends AppController
                 'user_from' => $this->request->getData('user_id'),
                 'notification' => 'Shared on your post.' . $post->id,
                 'status' => false,
+                'created' => $now,
+                'modified' => $now,
                 ];
                 $noti = $notification->newEntity($data);
                 $notification->save($noti);

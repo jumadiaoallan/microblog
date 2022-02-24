@@ -68,5 +68,4 @@ class ErrorController extends AppController
     public function afterFilter(EventInterface $event)
     {
     }
-
 }

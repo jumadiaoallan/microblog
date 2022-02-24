@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -15,7 +14,6 @@ use SoftDelete\Model\Table\SoftDeleteTrait;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\CommentsTable&\Cake\ORM\Association\HasMany $Comments
  * @property \App\Model\Table\LikesTable&\Cake\ORM\Association\HasMany $Likes
- *
  * @method \App\Model\Entity\Post newEmptyEntity()
  * @method \App\Model\Entity\Post newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Post[] newEntities(array $data, array $options = [])
@@ -29,7 +27,6 @@ use SoftDelete\Model\Table\SoftDeleteTrait;
  * @method \App\Model\Entity\Post[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Post[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Post[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
- *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class PostsTable extends Table
@@ -61,18 +58,17 @@ class PostsTable extends Table
 
         $this->hasMany('Comments', [
             'foreignKey' => 'post_id',
-            'sort' => ['Comments.created'=>'DESC'],
+            'sort' => ['Comments.created' => 'DESC'],
         ]);
 
         $this->hasMany('Likes', [
             'foreignKey' => 'post_id',
         ]);
 
-       $this->hasMany('Followers', [
+        $this->hasMany('Followers', [
             'foreignKey' => 'follower_user',
             'joinType' => 'INNER',
-       ]);
-
+        ]);
     }
 
     /**
@@ -83,19 +79,14 @@ class PostsTable extends Table
      */
     public function validationDefault(Validator $validator): Validator
     {
+        $validator->setProvider('table', 'App\Model\PostsTable');
         $validator
             ->allowEmptyString('id', null, 'create');
-
-        // $validator
-        //     ->scalar('image_path')
-        //     ->maxLength('image_path', 255)
-        //     ->allowEmptyString('image_path');
 
         $validator
             ->scalar('post')
             ->maxLength('post', 140)
-            ->requirePresence('post', 'create')
-            ->notEmptyString('post');
+            ->allowEmptyString('post');
 
         $validator
             ->scalar('shared_user_id')
@@ -111,9 +102,8 @@ class PostsTable extends Table
               'extension' => [
                 'rule' => ['extension', ['gif', 'png', 'jpg', 'jpeg']],
                 'message' => 'Please upload only jpg, jpeg or png',
-              ]
+              ],
             ]);
-
 
         return $validator;
     }

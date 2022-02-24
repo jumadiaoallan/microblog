@@ -26,78 +26,6 @@
   </div>
 </div>
 
-
-<div class = "modal" id ="profiles">
-  <div class="modal-dialog modal-dialog-centered" >
-    <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="modal-header" style="background-color:#7f7f7f;">
-        <?php if ($this->Identity->get('id') == $detail['id']) : ?>
-          <h4 class="modal-title">Edit Profile Photo</h4>
-        <?php endif; ?>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <!-- Modal body -->
-      <div class="modal-body"  style="background-color:#7f7f7f;">
-        <?php if ($userID == $detail['id']) : ?>
-            <?= $this->Form->create($photo, ['url' => ['controller' => 'Users', 'action' => 'profilepic', $userID], 'type' => 'file']) ?>
-        <?php endif; ?>
-        <center>
-        <?=$this->Html->image('upload/' . h($detail['profile_path']), ['class' => 'img-fluid', 'id' => 'profile']);?>
-        </center>
-        <?php if ($userID == $detail['id']) : ?>
-            <?= $this->Form->control('update_profile', ['type' => 'file', 'class' => 'form-control mt-2', 'id' => 'imgInp', 'accept' => 'image/png, image/jpg, image/jpeg']) ?>
-        <?php endif; ?>
-      </div>
-      <?php if ($userID == $detail['id']) : ?>
-        <!-- Modal footer -->
-        <div class="modal-footer"  style="background-color:#7f7f7f;">
-            <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
-            <?= $this->Form->end() ?>
-        </div>
-      <?php endif; ?>
-    </div>
-  </div>
-</div>
-
-
-<!-- BANNER PHOTO-->
-<div class="modal" id="banner">
-  <div class="modal-dialog modal-lg modal-dialog-centered" >
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header" style="background-color:#7f7f7f;">
-        <?php if ($userID == $detail['id']) : ?>
-          <h4 class="modal-title">Edit Banner Photo</h4>
-        <?php endif; ?>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body"  style="background-color:#7f7f7f;">
-        <?php if ($userID == $detail['id']) : ?>
-            <?= $this->Form->create($photo, ['url' => ['controller' => 'Users', 'action' => 'banner', $userID], 'type' => 'file']) ?>
-        <?php endif; ?>
-
-        <center>
-        <?= $this->Html->image('upload/' . h($detail['banner_path']), ['alt' => 'Banner', 'class' => 'img-fluid', 'id' => 'banners']); ?>
-        </center>
-        <?php if ($userID == $detail['id']) : ?>
-            <?= $this->Form->control('update_banner', ['type' => 'file', 'class' => 'form-control mt-2', 'id' => 'imgInpbanner' ,'accept' => 'image/png, image/jpg, image/jpeg']) ?>
-        <?php endif; ?>
-      </div>
-      <?php if ($userID == h($detail['id'])) : ?>
-        <div class="modal-footer"  style="background-color:#7f7f7f;">
-            <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
-            <?= $this->Form->end() ?>
-        </div>
-      <?php endif; ?>
-    </div>
-  </div>
-</div>
-
-
 <!-- EDIT POST -->
 <div class="modal" id="editPost">
   <div class="modal-dialog modal-lg modal-dialog-centered" >
@@ -112,18 +40,26 @@
       <!-- Modal body -->
       <div class="modal-body"  style="background-color:#7f7f7f;">
         <?= $this->Form->create($post, ['id' => 'edit_form', 'type' => 'file']) ?>
-         <?= $this->Form->control('post', ['type' => 'textarea', 'id' => 'edit_post' , 'rows' => 3, 'class' => 'form-control mt-2','label' => false, 'style' => 'min-width: 100%; background-color:#999999;color:white;']) ?>
-        <center>
-        <img src="" id="image_edit" class="img-fluid mt-2" alt="">
-        </center>
+         <?= $this->Form->control('post', ['type' => 'textarea',
+            'id' => 'edit_post' ,
+            'rows' => 3,
+            'class' => 'form-control mt-2',
+            'label' => false,
+            'style' => 'min-width: 100%; background-color:#999999;color:white;',
+            'required' => false,
+            'maxlength' => false ]) ?>
+        <div class="post_photo" id="edit_preview">
+        <img src="" id="image_edit" class="img-fluid mt-2" />
+      </div>
         <div class="row mt-2">
-          <div class="col-6">
-            <?= $this->Form->control('id', ['type' => 'hidden', 'id' => 'id']) ?>
-            <?= $this->Form->control('image_post', ['type' => 'file','class' => 'form-control mt-2 d-none', 'id' => 'post_edit', 'label' => false]) ?>
+          <?= $this->Form->control('id', ['type' => 'hidden', 'id' => 'id']) ?>
+          <?= $this->Form->control('image_post', ['type' => 'file','class' => 'form-control mt-2 d-none', 'id' => 'post_edit', 'label' => false]) ?>
+          <?= $this->Form->control('remove_image', ['type' => 'hidden','class' => 'form-control mt-2', 'id' => 'remove_image', 'label' => false]) ?>
+          <div class="col-md-12">
             <label for="post_edit" class="form-control btn btn-secondary btn-sm btn-block mt-1" id="btn">EDIT IMAGE</label>
           </div>
-          <div class="col-6">
-            <span class="form-control btn btn-secondary btn-sm btn-block mt-1" onclick="$('#image_edit').attr('src', null);">REMOVE IMAGE</span>
+          <div class="col-md-12 d-none" id="btn_remove">
+            <span class="form-control btn btn-secondary btn-sm btn-block mt-1" onclick="remove_image()">REMOVE IMAGE</span>
           </div>
         </div>
       </div>
@@ -226,13 +162,22 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body"  style="background-color:#7f7f7f;">
-        <?= $this->Form->create(null, ['url' => ['controller' => 'Posts','action' => 'share']]) ?>
-        <?= $this->Form->control('post', ['type' => 'textarea', 'rows' => 3, 'class' => 'form-control mt-2','label' => false, 'style' => 'min-width: 100%; background-color:#999999;color:white;', 'required' => true, 'placeholder' => 'WRITE A POST']) ?>
+        <?= $this->Form->create(null, ['url' => ['controller' => 'Posts','action' => 'share'], 'novalidate' => true]) ?>
+        <?= $this->Form->control('post', ['type' => 'textarea',
+         'rows' => 3,
+         'class' => 'form-control mt-2',
+         'label' => false,
+         'style' => 'min-width: 100%; background-color:#999999;color:white;',
+         'placeholder' => 'WRITE A POST',
+         'required' => false,
+         'maxlength' => false ]) ?>
         <div class="row justify-content-md-center mt-3 card p-3" style="background-color:#999999;color:white;">
           <div class="col-md-12">
             <table style="width:100%;">
               <tr>
-                <td style=" width:42px;" rowspan="2" class="p-2"> <?= $this->Html->image('upload/icon.PNG', ['width' => '40px', 'id' => 'sprofile']); ?> </td>
+                <td style=" width:50px;" rowspan="2" class="p-2 post_profile">
+                  <?= $this->Html->image('upload/icon.PNG', [ 'id' => 'sprofile']); ?>
+                </td>
                 <td>
                   <span id="sname"> Allan  </span>
                 </td>

@@ -27,7 +27,7 @@
 
 
 </body>
-<?= $this->Html->script('custom.js?v=1.4');?>
+<?= $this->Html->script('custom.js?v=1.6');?>
 <script type="text/javascript">
   var isLogged_in = "<?= h($this->Identity->get('id'))?>";
 </script>

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -36,7 +37,7 @@ class NotificationsController extends AppController
         $search = $users->newEmptyEntity();
         $user = $users->find()->toArray();
         $post = $posts->find()->toArray();
-
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         $usersLogedin = $this->Authentication->getResult();
         $logged = $usersLogedin->getData();
         if (!empty($logged)) {
@@ -59,7 +60,10 @@ class NotificationsController extends AppController
                 $getNoti = $this->Notifications->get($save->id, [
                 'contain' => [],
                 ]);
-                $data = ['status' => true];
+                $data = [
+                  'status' => true,
+                  'modified' => $now,
+                ];
                 $notiSave = $this->Notifications->patchEntity($getNoti, $data);
                 $this->Notifications->save($notiSave);
             }

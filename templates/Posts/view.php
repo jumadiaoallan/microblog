@@ -4,8 +4,10 @@
       <tr>
         <?php foreach ($alluser as $userDetail) : ?>
             <?php if ($userDetail->id == $post->user_id) : ?>
-        <td style=" width:42px;" rowspan="2" class="p-2"><?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'border' => '1', 'width' => '40px']); ?></td>
-        <td>
+        <td style="width:50px;" rowspan="2" class="p-2 post_profile">
+                <?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog']); ?>
+        </td>
+        <td>  &nbsp;
                 <?= h($userDetail->full_name)?>
         </td>
             <?php endif; ?>
@@ -16,7 +18,7 @@
         </td>
       </tr>
       <tr>
-        <td> <sup><?= date('m-d-Y H:i A', strtotime(h($post->created))) ?></sup></td>
+        <td> &nbsp;<sup><?= date('m-d-Y H:i A', strtotime(h($post->created))) ?></sup></td>
         <td></td>
       </tr>
     </table>
@@ -39,7 +41,7 @@
                           <tr>
                             <?php foreach ($alluser as $userDetail) : ?>
                                 <?php if ($userDetail->id == $shared->user_id) : ?>
-                            <td style=" width:42px;" rowspan="2" class="p-2"><?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'border' => '1', 'width' => '40px']); ?></td>
+                            <td style=" width:50px;" rowspan="2" class="p-2 post_profile"><?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog']); ?></td>
                             <td>
                                     <?= $this->Html->link(
                                         h($userDetail->full_name),
@@ -133,8 +135,11 @@
                 <tr>
                   <?php foreach ($alluser as $element) : ?>
                         <?php if ($element->id == $comment->user_id) : ?>
-                  <td style=" width:42px;" rowspan="2" class="p-2"><?= $this->Html->image('upload/' . h($element->profile_path), ['alt' => 'Microblog', 'border' => '1', 'width' => '40px']); ?></td>
-                  <td>
+                  <td style=" width:50px;" rowspan="2" class="p-2 post_profile">
+                    &nbsp;
+                            <?= $this->Html->image('upload/' . h($element->profile_path), ['alt' => 'Microblog']); ?>
+                  </td>
+                  <td>      &nbsp;
                             <?= $this->Html->link(
                                 h($element->full_name),
                                 ['controller' => 'Users', 'action' => 'profile', h($element->id)],
@@ -152,7 +157,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td> <sup><?= date('m-d-Y H:i A', strtotime(h($comment->created))) ?></sup></td>
+                  <td> &nbsp;&nbsp;<sup><?= date('m-d-Y H:i A', strtotime(h($comment->created))) ?></sup></td>
                   <td></td>
                 </tr>
               </table>
@@ -167,7 +172,7 @@
           <span class="text-center">No Comment</span>
       <?php endif; ?>
       <center>
-        <?php if (count($post->comments) != 0) : ?>
+        <?php if (count($post->comments) > 3) : ?>
           <span id="loadMore" data-id = "<?=$post->id?>" onclick="loadMore(this)" style="cursor:pointer;">Load More</span>
         <?php endif; ?>
       </center>
@@ -188,3 +193,18 @@
 <?= $this->element('modal') ?>
 
 <?= $this->Html->script('view-comment-load');?>
+
+<script type="text/javascript">
+
+$( document ).ready(function() {
+    post_edit.onchange = evt => {
+      const [file] = post_edit.files
+      if (file) {
+        $("#image_edit").removeClass("d-none");
+        image_edit.src = URL.createObjectURL(file);
+      }
+      }
+
+  });
+
+</script>

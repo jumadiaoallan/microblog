@@ -11,6 +11,17 @@
       <div class="row justify-content-md-center" style="margin-top:5%;">
         <div class="col-6 p-3">
           <?= $this->Flash->render(); ?>
+          <?php if (!empty($this->Flash->render('not-verified'))) : ?>
+            <div class="alert alert-info">
+              Already expired email verification?, Click
+              <?= $this->Html->link(
+                  'here',
+                  ['controller' => 'Users', 'action' => 'resend'],
+                  ['style' => 'color:inherit;text-decoration:none;']
+              ); ?>
+              to resend.
+            </div>
+          <?php endif; ?>
         </div>
       </div>
 

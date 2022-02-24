@@ -7,9 +7,15 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <?= $this->Form->create($search, ['type' => 'get', 'url' => ['controller' => 'Users', 'action' => 'search']]); ?>
+        <?= $this->Form->create($search, ['type' => 'get', 'url' => ['controller' => 'Users', 'action' => 'search'], 'novalidate' => true]); ?>
             <div class="input-group">
-              <?= $this->Form->control('search', ['class' => 'form-control', 'placeholder' => 'Search', 'id' => 'search', 'label' => false]) ?>
+              <?= $this->Form->control('search', ['class' => 'form-control',
+                'placeholder' => 'Search',
+                'id' => 'search',
+                'label' => false,
+                'required' => false,
+                'maxlength' => false,
+               ]) ?>
               <?= $this->Form->button(__(''), ['class' => 'form-control btn btn-secondary bi-search', 'label' => false]) ?>
             </div>
         <?= $this->Form->end()?>

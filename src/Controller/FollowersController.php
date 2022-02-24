@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -74,9 +75,12 @@ class FollowersController extends AppController
         $following = $this->request->getData('following_user');
         $follower = $this->request->getData('follower_user');
         $follow = $checkDB->find('all', ['withDeleted'])->where(['following_user' => $following])->andWhere(['follower_user' => $follower])->first();
-
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         if (!empty($follow)) {
-            $data = ['deleted' => null];
+            $data = [
+              'deleted' => null,
+              'modified' => $now,
+            ];
             $foll = $this->Followers->patchEntity($follow, $data);
             $this->Followers->save($foll);
           //notification
@@ -87,6 +91,8 @@ class FollowersController extends AppController
             'user_from' => $this->request->getData('follower_user'),
             'notification' => 'Followed you.',
             'status' => false,
+            'created' => $now,
+            'modified' => $now,
             ];
             $noti = $notification->newEntity($data);
             $notification->save($noti);
@@ -97,7 +103,13 @@ class FollowersController extends AppController
 
         $follower = $this->Followers->newEmptyEntity();
         if ($this->request->is('ajax')) {
-            $follower = $this->Followers->patchEntity($follower, $this->request->getData());
+            $data = [
+              'following_user' => $this->request->getData('following_user'),
+              'follower_user' => $this->request->getData('follower_user'),
+              'created' => $now,
+              'modified' => $now,
+            ];
+            $follower = $this->Followers->patchEntity($follower, $data);
             if ($this->Followers->save($follower)) {
               //notification
                 $notification = TableRegistry::get('Notifications');
@@ -107,6 +119,8 @@ class FollowersController extends AppController
                 'user_from' => $this->request->getData('follower_user'),
                 'notification' => 'Followed you.',
                 'status' => false,
+                'created' => $now,
+                'modified' => $now,
                 ];
                 $noti = $notification->newEntity($data);
                 $notification->save($noti);
@@ -156,7 +170,7 @@ class FollowersController extends AppController
         $follower = $this->Followers->get($id);
 
         if ($this->Followers->delete($follower)) {
-            $this->Flash->success(__('The follower has been deleted.'));
+            // $this->Flash->success(__('The follower has been deleted.'));
             echo json_encode(['message' => 'success', 'data' => 'unfollowed']);
             exit;
         } else {

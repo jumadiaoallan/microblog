@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -49,8 +50,17 @@ class CommentsController extends AppController
     {
 
         $comment = $this->Comments->newEmptyEntity();
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         if ($this->request->is('ajax')) {
-            $comment = $this->Comments->patchEntity($comment, $this->request->getData());
+            $data = [
+              'post_id' => $this->request->getData('post_id'),
+              'user_id' => $this->request->getData('user_id'),
+              'comment' => $this->request->getData('comment'),
+              'created' => $now,
+              'modified' => $now,
+            ];
+
+            $comment = $this->Comments->patchEntity($comment, $data);
             if ($this->Comments->save($comment)) {
               //notification
                 $notification = TableRegistry::get('Notifications');
@@ -62,6 +72,8 @@ class CommentsController extends AppController
                 'user_from' => $this->request->getData('user_id'),
                 'notification' => 'Comment on your post.' . $this->request->getData('post_id'),
                 'status' => false,
+                'created' => $now,
+                'modified' => $now,
                 ];
                 $noti = $notification->newEntity($data);
                 $notification->save($noti);
@@ -87,6 +99,14 @@ class CommentsController extends AppController
         $comment = $this->Comments->get($id, [
             'contain' => [],
         ]);
+
+        $userLoggedIn = $this->Authentication->getResult()->getData()->id;
+        if ($comment->user_id != $userLoggedIn) {
+            $this->Flash->error(__('Something wrong. Please, try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $comment = $this->Comments->patchEntity($comment, $this->request->getData());
             if ($this->Comments->save($comment)) {
@@ -111,6 +131,14 @@ class CommentsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete', 'ajax']);
         $comment = $this->Comments->get($id);
+
+        $userLoggedIn = $this->Authentication->getResult()->getData()->id;
+        if ($comment->user_id != $userLoggedIn) {
+            $this->Flash->error(__('Something wrong. Please, try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
         if ($this->Comments->delete($comment)) {
             $this->Flash->success(__('The comment has been deleted.'));
             echo json_encode(['massage' => 'success']);

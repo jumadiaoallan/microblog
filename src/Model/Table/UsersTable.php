@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -15,7 +14,6 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\LikesTable&\Cake\ORM\Association\HasMany $Likes
  * @property \App\Model\Table\NotificationsTable&\Cake\ORM\Association\HasMany $Notifications
  * @property \App\Model\Table\PostsTable&\Cake\ORM\Association\HasMany $Posts
- *
  * @method \App\Model\Entity\User newEmptyEntity()
  * @method \App\Model\Entity\User newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
@@ -29,7 +27,6 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
- *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class UsersTable extends Table
@@ -61,7 +58,7 @@ class UsersTable extends Table
         ]);
         $this->hasMany('Posts', [
             'foreignKey' => 'user_id',
-            'sort' => ['Posts.created'=>'DESC'],
+            'sort' => ['Posts.created' => 'DESC'],
         ]);
 
         $this->belongsTo('Followers', [
@@ -71,7 +68,6 @@ class UsersTable extends Table
         $this->belongsTo('Followers', [
             'foreignKey' => 'follower_user',
         ]);
-
     }
 
     /**
@@ -82,6 +78,8 @@ class UsersTable extends Table
      */
     public function validationDefault(Validator $validator): Validator
     {
+        $validator->setProvider('table', 'App\Model\UsersTable');
+
         $validator
             ->integer('id')
             ->allowEmptyString('id', null, 'create');
@@ -97,11 +95,20 @@ class UsersTable extends Table
             ->maxLength('full_name', 100)
             ->requirePresence('full_name', 'create')
             ->notEmptyString('full_name')
-            ->add('full_name',[
+            ->add('full_name', [
               'custom' => [
                 'rule' => ['custom', '/^[a-z ]*$/i'],
-                'message' => 'Alphabetical characters only'
-              ]
+                'message' => 'Alphabetical characters only',
+              ],
+            ]);
+
+        $validator
+            ->requirePresence('birthday', 'create')
+            ->notEmptyString('birthday')
+            ->add('birthday', 'validRange', [
+              'rule' => ['dateRange', ['min' => '1800-01-01', 'max' => 'today']],
+              'message' => 'Invalid Date! Please use real birthday',
+              'provider' => 'table',
             ]);
 
         $validator
@@ -114,25 +121,26 @@ class UsersTable extends Table
             ->maxLength('password', 255)
             ->requirePresence('password', 'create')
             ->notEmptyString('password')
-            ->add('password',  [
+            ->add('password', [
                 'required' => [
-                  'rule' => array('custom','(^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]*).{8,}$)'),
-                  'message' => 'Password required atlest 1 capital letter, 1 special character and minimum of 8 characters long',
-                ]
+                  'rule' => ['custom','(^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]*).{8,}$)'],
+                  'message' => 'Password required atleast 1 capital letter, 1 special character, 1 number and minimum of 8 characters long',
+                ],
             ]);
 
         $validator
-            ->sameAs('confirm_password', 'password', 'Password match failed');
-
-        $validator
-            ->requirePresence('age', 'create')
-            ->notEmptyString('age');
+            ->sameAs('confirm_password', 'password', 'Password match failed')
+            ->notEmptyString('confirm_password');
 
         $validator
             ->scalar('gender')
             ->maxLength('gender', 20)
             ->requirePresence('gender', 'create')
-            ->notEmptyString('gender');
+            ->notEmptyString('gender')
+            ->add('gender', 'validValue', [
+                  'rule' => ['range', 0, 1],
+                  'message' => 'Invalid Choices',
+              ]);
 
           $validator
               ->boolean('verified')
@@ -154,7 +162,7 @@ class UsersTable extends Table
                 'rule' => ['extension', ['gif', 'png', 'jpg', 'jpeg']],
                 'allowEmpty' => false,
                 'message' => 'Please upload only jpg, jpeg or png',
-              ]
+              ],
             ]);
 
           $validator
@@ -163,7 +171,7 @@ class UsersTable extends Table
                 'extension' => [
                   'rule' => ['extension', ['gif', 'png', 'jpg', 'jpeg']],
                   'message' => 'Please upload only jpg, jpeg or png',
-                ]
+                ],
               ]);
 
           $validator
@@ -171,6 +179,35 @@ class UsersTable extends Table
               ->notEmptyString('search');
 
         return $validator;
+    }
+
+    /**
+     * date range validation
+     *
+     * @param array $check Contains the value passed from the view to be validated
+     * @param array $range Contatins an array with two parameters(optional) min and max
+     * @return bool False if in the past, True otherwise
+     */
+    public function dateRange($check, $range)
+    {
+        $convert = [];
+        array_push($convert, $check);
+        $strtotime_of_check = strtotime(reset($convert));
+        if ($range['min']) {
+            $strtotime_of_min = strtotime($range['min']);
+            if ($strtotime_of_min > $strtotime_of_check) {
+                return false;
+            }
+        }
+
+        if ($range['max']) {
+            $strtotime_of_max = strtotime($range['max']);
+            if ($strtotime_of_max < $strtotime_of_check) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -187,5 +224,4 @@ class UsersTable extends Table
 
         return $rules;
     }
-
 }

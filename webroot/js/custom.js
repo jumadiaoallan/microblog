@@ -1,14 +1,8 @@
-$( document ).ready(function() {
-    post_edit.onchange = evt => {
-      const [file] = post_edit.files
-      if (file) {
-        $("#image_edit").removeClass("d-none");
-        image_edit.src = URL.createObjectURL(file);
-      }
-      }
-
-  });
-
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
 
 function editPost(data) {
     var id = $(data).data('id');
@@ -20,14 +14,23 @@ function editPost(data) {
     $('#edit_form').prop('action', '/posts/edit/'+id);
 
     if (image != '') {
-      $("#image_edit").removeClass("d-none");
+      $("#edit_preview").removeClass("d-none");
       $("#btn").text("EDIT IMAGE");
       $("#image_edit").attr("src", '../../img/post_upload/'+image);
     } else {
-      $("#image_edit").addClass("d-none");
+      $("#edit_preview").addClass("d-none");
+      $("#btn_remove").addClass("d-none");
       $("#image_edit").attr("src", null);
       $("#btn").text("ADD IMAGE");
     }
+  }
+
+  function remove_image() {
+    $('#image_edit').attr('src', null);
+    $("#edit_preview").addClass("d-none");
+    $("#btn_remove").addClass("d-none");
+    $('#btn').html('ADD IMAGE');
+    $('#remove_image').val('removed');
   }
 
 function deletePost(data) {
@@ -80,8 +83,9 @@ function addcomment(data) {
       var user_id = $(data).data('uid');
       var comment_id = "comment_"+post_id;
       var comment = document.getElementById(comment_id).value;
+
       if(comment.length == 0){
-          $('#'+comment_id).after('<div style="font-size:12px;color:red;">Comment is Required</div>');
+          $('#'+comment_id).after('<div style="font-size:12px;color:red;">Comment is Required</div>').end();
       }
       else {
           $('#'+comment_id).next(".red").remove();
@@ -184,7 +188,7 @@ function share(data) {
             profile.attr("src","../../img/upload/"+item['profile_path']);
             fullname.html(item['full_name']);
             date.html(date_formatted);
-            post.html(arr['post']['post']);
+            post.html(htmlEncode(arr['post']['post']));
             post_id.val(arr['post']['id']);
 
             if (arr['post']['image_path'] != null) {

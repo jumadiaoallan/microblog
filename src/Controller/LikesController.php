@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -52,7 +53,7 @@ class LikesController extends AppController
         $id = $this->request->getData('value');
         $post_id = $this->request->getData('post_id');
         $user_id = $this->request->getData('user_id');
-
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         $userLoggedIn = $this->Authentication->getResult()->getData()->id;
 
         if ($this->request->is('ajax')) {
@@ -87,6 +88,8 @@ class LikesController extends AppController
                     'user_from' => $user_id,
                     'notification' => 'Like on your post.' . $post_id,
                     'status' => false,
+                    'created' => $now,
+                    'modified' => $now,
                     ];
                     $noti = $notification->newEntity($data);
                     $notification->save($noti);
@@ -101,6 +104,8 @@ class LikesController extends AppController
                     $data = [
                     'user_id' => $user_id,
                     'post_id' => $post_id,
+                    'created' => $now,
+                    'modified' => $now,
                     ];
                     $like = $this->Likes->newEntity($data);
                     if ($this->Likes->save($like)) {
@@ -116,6 +121,8 @@ class LikesController extends AppController
                         'user_from' => $user_id,
                         'notification' => 'Like on your post.' . $post_id,
                         'status' => false,
+                        'created' => $now,
+                        'modified' => $now,
                         ];
                         $noti = $notification->newEntity($data);
                         $notification->save($noti);

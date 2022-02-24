@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use SoftDelete\Model\Table\SoftDeleteTrait;
+
 /**
  * Comments Model
  *
  * @property \App\Model\Table\PostsTable&\Cake\ORM\Association\BelongsTo $Posts
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- *
  * @method \App\Model\Entity\Comment newEmptyEntity()
  * @method \App\Model\Entity\Comment newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Comment[] newEntities(array $data, array $options = [])
@@ -27,20 +26,20 @@ use SoftDelete\Model\Table\SoftDeleteTrait;
  * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
- *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CommentsTable extends Table
 {
-    /**
-     * Initialize method
-     *
-     * @param array $config The configuration for the Table.
-     * @return void
-     */
+     /**
+      * Initialize method
+      *
+      * @param array $config The configuration for the Table.
+      * @return void
+      */
      use SoftDeleteTrait;
 
      protected $softDeleteField = 'deleted';
+
     public function initialize(array $config): void
     {
         parent::initialize($config);

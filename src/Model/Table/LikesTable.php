@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -14,7 +13,6 @@ use SoftDelete\Model\Table\SoftDeleteTrait;
  *
  * @property \App\Model\Table\PostsTable&\Cake\ORM\Association\BelongsTo $Posts
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- *
  * @method \App\Model\Entity\Like newEmptyEntity()
  * @method \App\Model\Entity\Like newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Like[] newEntities(array $data, array $options = [])
@@ -28,20 +26,20 @@ use SoftDelete\Model\Table\SoftDeleteTrait;
  * @method \App\Model\Entity\Like[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Like[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Like[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
- *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class LikesTable extends Table
 {
-    /**
-     * Initialize method
-     *
-     * @param array $config The configuration for the Table.
-     * @return void
-     */
+     /**
+      * Initialize method
+      *
+      * @param array $config The configuration for the Table.
+      * @return void
+      */
      use SoftDeleteTrait;
 
      protected $softDeleteField = 'deleted';
+
     public function initialize(array $config): void
     {
         parent::initialize($config);

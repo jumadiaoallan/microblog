@@ -14,12 +14,13 @@ use Cake\Auth\DefaultPasswordHasher;
  * @property string $full_name
  * @property string $email
  * @property string $password
- * @property int $age
+ * @property string $birthday
  * @property string|null $profile_path
  * @property string|null $banner_path
  * @property string $gender
  * @property bool|null $verified
  * @property string $activation_token
+ * @property \Cake\I18n\FrozenTime|null $generated_token
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  * @property \Cake\I18n\FrozenTime|null $deleted
@@ -45,12 +46,13 @@ class User extends Entity
         'full_name' => true,
         'email' => true,
         'password' => true,
-        'age' => true,
+        'birthday' => true,
         'profile_path' => true,
         'banner_path' => true,
         'gender' => true,
         'verified' => true,
         'activation_token' => true,
+        'generated_token' => true,
         'created' => true,
         'modified' => true,
         'deleted' => true,

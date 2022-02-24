@@ -6,12 +6,13 @@
         <tr>
           <?php foreach ($alluser as $userDetail) : ?>
                 <?php if ($userDetail->id == $post->user_id) : ?>
-          <td style=" width:42px;" rowspan="2" class="p-2">
-                    <?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'width' => '40px', 'url' => ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)]])?>
+          <td style="width:50px;" rowspan="2" class="post_profile p-2">
+                    <?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)]])?>
           </td>
           <td>
+                    &nbsp;
                     <?= $this->Html->link(
-                        $userDetail->full_name,
+                        h($userDetail->full_name),
                         ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)],
                         ['style' => 'color:inherit;text-decoration:none;']
                     ); ?>
@@ -26,7 +27,7 @@
           </td>
         </tr>
         <tr>
-          <td> <sup><?=  date('m-d-Y H:i A', strtotime($post->created)) ?></sup></td>
+          <td>&nbsp; <sup><?= date('m-d-Y h:i A', strtotime(h($post->created))) ?></sup></td>
           <td></td>
         </tr>
       </table>
@@ -37,7 +38,7 @@
             ['controller' => 'Posts', 'action' => 'view', h($post->id)],
             ['style' => 'color:inherit;text-decoration:none;']
         ); ?>
-      <p style="text-align: justify;"><?= $post->post ?></p>
+      <p style="text-align: justify;"><?= h($post->post) ?></p>
 
         <?php if (!empty($post->shared_post_id)) : ?>
               <?php foreach ($allpost as $shared) : ?>
@@ -49,10 +50,11 @@
                           <tr>
                             <?php foreach ($alluser as $userDetail) : ?>
                                 <?php if ($userDetail->id == $shared->user_id) : ?>
-                            <td style=" width:42px;" rowspan="2" class="p-2">
-                                    <?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'width' => '40px', 'url' => ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)]])?>
+                            <td style="width:50px;" rowspan="2" class="p-2 post_profile">
+                                    <?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)]])?>
                             </td>
                             <td>
+                                    &nbsp;
                                     <?= $this->Html->link(
                                         h($userDetail->full_name),
                                         ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)],
@@ -63,7 +65,7 @@
                             <?php endforeach; ?>
                           </tr>
                           <tr>
-                            <td> <sup><?=  date('m-d-Y H:i A', strtotime(h($shared->created))) ?></sup></td>
+                            <td> &nbsp;<sup><?= date('m-d-Y H:i A', strtotime(h($shared->created))) ?></sup></td>
                           </tr>
                         </table>
                       </div>
@@ -126,7 +128,7 @@
           <button type="button" name="button" class="form-control btn btn-sm btn-secondary" data-id="<?= $post->id?>" onclick="showComment(this)">COMMENT</button>
         </div>
         <div class="col-sm-4 mt-2">
-          <button data-bs-toggle="modal" data-bs-target = "#sharePost" class="form-control btn btn-sm btn-secondary" data-postid = "<?= !empty($post->shared_post_id) ? $post->shared_post_id : $post->id?>" onclick="share(this)">SHARE</button>
+          <button data-bs-toggle="modal" data-bs-target = "#sharePost" class="form-control btn btn-sm btn-secondary" data-postid = "<?= !empty($post->shared_post_id) ? h($post->shared_post_id) : h($post->id)?>" onclick="share(this)">SHARE</button>
         </div>
       </div>
     </div>
@@ -140,8 +142,9 @@
                   <tr>
                     <?php foreach ($alluser as $element) : ?>
                         <?php if ($element->id == $comment->user_id) : ?>
-                    <td style=" width:42px;" rowspan="2" class="p-2"><?= $this->Html->image('upload/' . h($element->profile_path), ['alt' => 'Microblog', 'border' => '1', 'width' => '40px']); ?></td>
+                    <td style="width:50px;" rowspan="2" class="p-2 post_profile"><?= $this->Html->image('upload/' . h($element->profile_path), ['alt' => 'Microblog']); ?></td>
                     <td>
+                            &nbsp;
                             <?= $this->Html->link(
                                 h($element->full_name),
                                 ['controller' => 'Users', 'action' => 'profile', h($element->id)],
@@ -158,7 +161,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td> <sup><?= date('m-d-Y H:i A', strtotime(h($comment->created))) ?></sup></td>
+                    <td> &nbsp;&nbsp;<sup><?= date('m-d-Y h:i A', strtotime(h($comment->created))) ?></sup></td>
                     <td></td>
                   </tr>
                 </table>
@@ -174,8 +177,8 @@
 
         <?php endif; ?>
         <center>
-          <?php if (count($post->comments) != 0) : ?>
-            <span id="loadMore_<?=$post->id?>" data-id = "<?=$post->id?>" onclick="loadMore(this)" style="cursor:pointer;">Load More</span>
+          <?php if (count($post->comments) > 3) : ?>
+            <span id="loadMore_<?=h($post->id)?>" data-id = "<?=h($post->id)?>" onclick="loadMore(this)" style="cursor:pointer;">Load More</span>
           <?php endif; ?>
         </center>
       </div>
@@ -187,7 +190,9 @@
         <textarea name="comment" id="<?= 'comment_' . h($post->id) ?>" rows="3" class="form-control mt-2" style="min-width: 100%; background-color:#999999;color:white;" placeholder="WRITE A COMMENT"></textarea>
       </div>
       <div class="col-md-3 offset-md-9">
-        <button name="btnComment" class="form-control btn btn-secondary btn-sm mt-2" data-pid="<?= h($post->id) ?>" data-uid="<?= h($this->Identity->get('id'))?>" onclick="addcomment(this)"> SUBMIT </button>
+        <button name="btnComment" class="form-control btn btn-secondary btn-sm mt-2" data-pid="<?= h($post->id) ?>" data-uid="<?= h($this->Identity->get('id'))?>" onclick="addcomment(this)">
+          SUBMIT
+        </button>
       </div>
     </div>
   </div>
@@ -209,7 +214,7 @@ $(document).ready(function(){
     <?php
       $arr = [];
     foreach ($user as $post) {
-        $contain = '.content_' . $post->id;
+        $contain = '.content_' . h($post->id);
         array_push($arr, $contain);
     }
     ?>
@@ -219,9 +224,17 @@ $(document).ready(function(){
 
     for (var i = 0; i < result.length; i++) {
       $(result[i]).slice(0, 3).show();
-
     }
 
+    post_edit.onchange = evt => {
+      const [file] = post_edit.files
+      if (file) {
+        $("#edit_preview").removeClass("d-none");
+        $("#btn_remove").removeClass("d-none");
+        $("#btn").text("EDIT IMAGE");
+        image_edit.src = URL.createObjectURL(file);
+      }
+      }
 
 })
 </script>

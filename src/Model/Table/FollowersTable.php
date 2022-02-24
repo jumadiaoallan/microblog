@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use SoftDelete\Model\Table\SoftDeleteTrait;
@@ -25,20 +23,20 @@ use SoftDelete\Model\Table\SoftDeleteTrait;
  * @method \App\Model\Entity\Follower[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Follower[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Follower[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
- *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class FollowersTable extends Table
 {
-    /**
-     * Initialize method
-     *
-     * @param array $config The configuration for the Table.
-     * @return void
-     */
+     /**
+      * Initialize method
+      *
+      * @param array $config The configuration for the Table.
+      * @return void
+      */
      use SoftDeleteTrait;
 
      protected $softDeleteField = 'deleted';
+
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -66,7 +64,6 @@ class FollowersTable extends Table
         $this->hasOne('Posts', [
           'foreignKey' => 'user_id',
         ]);
-
     }
 
     /**

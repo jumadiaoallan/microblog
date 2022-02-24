@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Auth\DefaultPasswordHasher;
+use Cake\I18n\FrozenTime;
 use Cake\Mailer\Mailer;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
@@ -21,15 +22,18 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
         $this->Authentication->allowUnauthenticated(['login']);
         $this->Authentication->addUnauthenticatedActions(['add', 'view']);
         $this->Authentication->addUnauthenticatedActions(['verification', 'view']);
+        $this->Authentication->addUnauthenticatedActions(['users', 'resend']);
     }
 
+    /**
+     * Login method
+     */
     public function login()
     {
          $this->viewBuilder()->setLayout('login');
@@ -45,6 +49,10 @@ class UsersController extends AppController
                 return $this->redirect($target);
             } else {
                 $this->Flash->error('Your account is not verified');
+                $this->Flash->error('Not Verified', [
+                    'key' => 'not-verified',
+                    'clear' => true,
+                ]);
                 $this->Authentication->logout();
 
                 return $this->redirect(['controller' => 'Users', 'action' => 'login']);
@@ -58,19 +66,41 @@ class UsersController extends AppController
          $this->set(compact('title', 'user'));
     }
 
+    /**
+     * Login process
+     */
     public function verification($token)
     {
         $this->viewBuilder()->setLayout('login');
         $userTable = TableRegistry::get('Users');
+        $title = 'Verification';
         $verify = $userTable->find('all')->where(['activation_token' => $token])->first();
-        if ($verify['verified'] == true) {
-            echo 'This email verification is already expired';
+        $tokens = $token;
+        $token_generated = FrozenTime::parse($verify['generated_token'], new \DateTimeZone('Asia/Manila'));
+        $expiry_token = $token_generated->addHours(1);
+        $get_expiry_token = $expiry_token->format('Y-m-d H:i:s');
+        $nowManila = FrozenTime::now('Asia/Manila');
+        $now = FrozenTime::parse($nowManila, new \DateTimeZone('Asia/Manila'));
+        $get_now_date = $now->format('Y-m-d H:i:s');
+
+        if ($get_now_date >= $get_expiry_token) {
+            echo "It's been 48 hours passed. This email verification is already expired";
             exit;
+        } else {
+            if ($verify['verified'] == true) {
+                echo 'This email verification is already used';
+                exit;
+            }
+            $verify->verified = true;
+            $userTable->save($verify);
         }
-        $verify->verified = true;
-        $userTable->save($verify);
+
+        $this->set(compact('tokens', 'title'));
     }
 
+    /**
+     * Index
+     */
     public function index()
     {
         $this->viewBuilder()->setLayout('main');
@@ -105,6 +135,7 @@ class UsersController extends AppController
     {
         $this->viewBuilder()->setLayout('login');
         $title = 'Registration';
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $userTable = TableRegistry::get('Users');
@@ -117,16 +148,19 @@ class UsersController extends AppController
             $activation_token = Security::hash(Security::randomBytes(32));
             $data = [
             'username' => $this->request->getData('username'),
-            'full_name' => $this->request->getData('full_name'),
-            'email' => $this->request->getData('email'),
+            'full_name' => $full_name,
+            'email' => $email,
             'gender' => $this->request->getData('gender'),
-            'age' => $this->request->getData('age'),
+            'birthday' => $this->request->getData('birthday'),
             'banner_path' => 'logo.PNG',
             'profile_path' => 'icon.PNG',
             'password' => $password,
             'confirm_password' => $confirm_password,
             'verified' => false,
             'activation_token' => $activation_token,
+            'generated_token' => $now,
+            'created' => $now,
+            'modified' => $now,
             ];
             $user = $userTable->newEntity($data);
 
@@ -148,14 +182,13 @@ class UsersController extends AppController
             } else {
                 $this->Flash->error(__('Registration failed, please try again.'));
             }
-
-
-
-
         }
         $this->set(compact('user', 'title'));
     }
 
+    /**
+     * Profile Details
+     */
     public function profile($id = null)
     {
         $this->viewBuilder()->setLayout('main');
@@ -199,31 +232,45 @@ class UsersController extends AppController
         $this->set(compact('header', 'photo', 'post', 'search', 'user', 'detail', 'alluser', 'allpost', 'followers', 'followersTbl'));
     }
 
+    /**
+     * Profile upload
+     */
     public function profilepic($id = null)
     {
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
-
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         if ($this->request->is(['patch', 'post', 'put'])) {
             if ($this->request->getData('update_profile')->getClientFilename() == '') {
-
                 return $this->redirect($this->referer());
             }
 
               $image = $this->request->getData('update_profile');
+
+              $imageSize = $image->getSize() * 0.000001;
+
+            if ($imageSize >= 5) {
+                $this->Flash->error('Image should only below 5MB.');
+
+                return $this->redirect($this->referer());
+            }
+
               $fileName = time() . '_' . $image->getClientFilename();
-              $data = ['profile_path' => $fileName];
+              $data = [
+                'profile_path' => $fileName,
+                'modified' => $now,
+              ];
               $user = $this->Users->patchEntity($user, $data);
 
               $path = WWW_ROOT . 'img' . DS . 'upload/' . $fileName;
               $image->moveTo($path);
 
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The profile photo has been updated.'));
+              if ($this->Users->save($user)) {
+                  $this->Flash->success(__('The profile photo has been updated.'));
 
-                return $this->redirect($this->referer());
-            }
+                  return $this->redirect($this->referer());
+              }
               $this->Flash->error(__('The profile photo could not be saved. Please, try again.'));
               $this->Flash->error('Invalid Image Format', [
                   'key' => 'invalid-image',
@@ -234,21 +281,35 @@ class UsersController extends AppController
         }
     }
 
+    /**
+     * Banner upload
+     */
     public function banner($id = null)
     {
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
-
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         if ($this->request->is(['patch', 'post', 'put'])) {
-          if ($this->request->getData('update_banner')->getClientFilename() == '') {
-
-              return $this->redirect($this->referer());
-          }
+            if ($this->request->getData('update_banner')->getClientFilename() == '') {
+                return $this->redirect($this->referer());
+            }
 
             $image = $this->request->getData('update_banner');
+
+            $imageSize = $image->getSize() * 0.000001;
+
+            if ($imageSize >= 5) {
+                $this->Flash->error('Image should only below 5MB.');
+
+                return $this->redirect($this->referer());
+            }
+
             $fileName = time() . '_' . $image->getClientFilename();
-            $data = ['banner_path' => $fileName];
+            $data = [
+              'banner_path' => $fileName,
+              'modified' => $now,
+            ];
             $user = $this->Users->patchEntity($user, $data);
 
             $path = WWW_ROOT . 'img' . DS . 'upload/' . $fileName;
@@ -284,7 +345,7 @@ class UsersController extends AppController
         if ((int)$id != $userLoggedIn) {
               return $this->redirect(['action' => 'edit/' . $userLoggedIn]);
         }
-
+        $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         $notification = $noti->find()
                       ->where(['user_id' => $userLoggedIn])
                       ->andWhere(['status' => false])
@@ -305,6 +366,7 @@ class UsersController extends AppController
                 'username' => $this->request->getData('username'),
                 'age' => $this->request->getData('age'),
                 'gender' => $this->request->getData('gender'),
+                'modified' => $now,
                 ];
             } else {
                 $data = [
@@ -314,6 +376,7 @@ class UsersController extends AppController
                 'gender' => $this->request->getData('gender'),
                 'password' => $this->request->getData('password'),
                 'confirm_password' => $this->request->getData('confirm_password'),
+                'modified' => $now,
                 ];
             }
 
@@ -348,6 +411,9 @@ class UsersController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    /**
+     * Logout method
+     */
     public function logout()
     {
         $this->Authentication->logout();
@@ -355,6 +421,9 @@ class UsersController extends AppController
         return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     }
 
+    /**
+     * Search method
+     */
     public function search()
     {
         $this->viewBuilder()->setLayout('main');
@@ -364,7 +433,7 @@ class UsersController extends AppController
             $find = $this->request->getQuery('term');
             $results = $this->Users->find('all', [
                                              'conditions' => ['Users.full_name LIKE ' => '%' . $find . '%'],
-                                             'recursive'  => -1,
+                                             'recursive' => -1,
                                              ]);
 
             $resultArr = [];
@@ -379,7 +448,9 @@ class UsersController extends AppController
 
         if ($this->request->is('get')) {
             $find = $this->request->getQuery('search');
-
+            if ($find == '') {
+                return $this->redirect($this->referer());
+            }
             $results = $this->Users->find()
             ->contain(['Posts'])
             ->where(['Users.full_name LIKE' => '%' . $find . '%']);
@@ -399,5 +470,69 @@ class UsersController extends AppController
         $header = ['title' => 'Search Result', 'notification' => $notification];
 
         $this->set(compact('header', 'search', 'result'));
+    }
+
+    /**
+     * Resend Validation Email
+     */
+    public function resend()
+    {
+        $this->viewBuilder()->setLayout('login');
+        $title = 'Resend Email Verification';
+        $find = $this->Users->newEmptyEntity();
+        $new_token = Security::hash(Security::randomBytes(32));
+        $new_date = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
+
+        if ($this->request->is('post')) {
+            $user_email = $this->request->getData('email');
+
+            $find = $this->Users->find()
+                ->where(['email' => $user_email])
+                ->first();
+
+            if (empty($user_email)) {
+                $this->Flash->error('Empty Email', [
+                'key' => 'empty-email',
+                'clear' => true,
+                ]);
+
+                return $this->redirect($this->referer());
+            }
+
+            if ($find->verified != true) {
+                $data = [
+                'activation_token' => $new_token,
+                'generated_token' => $new_date,
+                ];
+
+                $save = $this->Users->patchEntity($find, $data);
+                if ($this->Users->save($save)) {
+                    $mailer = new Mailer('default');
+                    $mailer->setFrom(['allanjumadiao.yns@gmail.com' => 'John Doe']);
+                    $mailer->setViewVars(['full_name' => $find->full_name,'token' => $new_token])
+                    ->setTo($user_email)
+                    ->setEmailFormat('html')
+                    ->setSubject('Resend Email Verification')
+                    ->viewBuilder()
+                    ->setTemplate('default')
+                    ->setLayout('default');
+                    $mailer->deliver();
+
+                    $this->Flash->success(__('The email verification is successful resend, please check you email.'));
+
+                    return $this->redirect(['action' => 'login']);
+                } else {
+                    $this->Flash->error(__('Something went wrong, please try again'));
+
+                    return $this->redirect($this->referer());
+                }
+            } else {
+                $this->Flash->error(__("You're email input is already activated!"));
+
+                return $this->redirect($this->referer());
+            }
+        }
+
+        $this->set(compact('title', 'find'));
     }
 }

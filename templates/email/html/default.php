@@ -8,7 +8,7 @@
     Hi <?= $full_name?> !,
     <br>
 
-    <p>Please click  <a href="http://mb.cakephp1.ynsdev.pw/users/verification/<?= h($token)?>">here</a> to activate your account </p>
+    <p>Please click  <a href="http://localhost:8765/users/verification/<?= h($token)?>">here</a> to activate your account </p>
 
     Thank you.
 

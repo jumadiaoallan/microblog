@@ -1,71 +1,75 @@
 <div class="row justify-content-md-center p-3" style="background-color:#999999;color:white;">
   <div class="col-md-12 card">
-
-
-
     <?php
     $fields = $following->toArray();
-        $div = "";
+        $div = '';
 
         $count = 0;
-        foreach ($fields as $f) {
-          foreach ($user as $followed_user) {
+    foreach ($fields as $f) {
+        foreach ($user as $followed_user) {
             if ($_GET['type'] == 'follower') {
-              if ($f['follower_user'] == $followed_user->id) {
-                if($count % 2 == 0) $div .='<div class="row p-3" style="background-color:#999999;color:white;"><div class="row">' . "\n";
-                $div .= '<div class="col-sm-6">';
+                if ($f['follower_user'] == $followed_user->id) {
+                    if ($count % 2 == 0) {
+                        $div .= '<div class="row p-3" style="background-color:#999999;color:white;"><div class="row">' . "\n";
+                    }
+                    $div .= '<div class="col-sm-6">';
 
-                $div .= "<table>";
-                $div .= "<tr>";
-                $div .= "<td>" . $this->Html->image("upload/".$followed_user->profile_path, ["alt" => "Microblog", 'width'=>'60px', 'url' => ['controller' => 'Users', 'action' => 'profile', $followed_user->id]]) . "</td>";
-                $div .= "<td>" . $this->Html->link(
-                              $followed_user->full_name,
-                              ['controller' => 'Users', 'action' => 'profile', $followed_user->id],
-                              ['style' => 'color:inherit;text-decoration:none;']) . "</td>";
-                $div .= "</table>";
-                $div .= "<hr>";
+                    $div .= '<table>';
+                    $div .= '<tr>';
+                    $div .= '<td>' . $this->Html->image('upload/' . $followed_user->profile_path, ['alt' => 'Microblog', 'width' => '60px', 'url' => ['controller' => 'Users', 'action' => 'profile', $followed_user->id]]) . '</td>';
+                    $div .= '<td>' . $this->Html->link(
+                        $followed_user->full_name,
+                        ['controller' => 'Users', 'action' => 'profile', $followed_user->id],
+                        ['style' => 'color:inherit;text-decoration:none;']
+                    ) . '</td>';
+                    $div .= '</table>';
+                    $div .= '<hr>';
 
-                $div .= '</div>' . "\n";
+                    $div .= '</div>' . "\n";
 
-                if($count % 2 != 0) $div .= '</div></div>';
+                    if ($count % 2 != 0) {
+                        $div .= '</div></div>';
+                    }
 
-                $count++;
-              }
-              } else {
+                    $count++;
+                }
+            } else {
                 if ($f['following_user'] == $followed_user->id) {
-                  if($count % 2 == 0) $div .='<div class="row p-3" style="background-color:#999999;color:white;"><div class="row">' . "\n";
-                  $div .= '<div class="col-sm-6">';
+                    if ($count % 2 == 0) {
+                        $div .= '<div class="row p-3" style="background-color:#999999;color:white;"><div class="row">' . "\n";
+                    }
+                    $div .= '<div class="col-sm-6">';
 
-                  $div .= "<table>";
-                  $div .= "<tr>";
-                  $div .= "<td>" . $this->Html->image("upload/".$followed_user->profile_path, ["alt" => "Microblog", 'width'=>'60px', 'url' => ['controller' => 'Users', 'action' => 'profile', $followed_user->id]]) . "</td>";
-                  $div .= "<td>" . $this->Html->link(
-                                $followed_user->full_name,
-                                ['controller' => 'Users', 'action' => 'profile', $followed_user->id],
-                                ['style' => 'color:inherit;text-decoration:none;']) . "</td>";
-                  $div .= "</table>";
-                  $div .= "<hr>";
+                    $div .= '<table>';
+                    $div .= '<tr>';
+                    $div .= '<td>' . $this->Html->image('upload/' . $followed_user->profile_path, ['alt' => 'Microblog', 'width' => '60px', 'url' => ['controller' => 'Users', 'action' => 'profile', $followed_user->id]]) . '</td>';
+                    $div .= '<td>' . $this->Html->link(
+                        $followed_user->full_name,
+                        ['controller' => 'Users', 'action' => 'profile', $followed_user->id],
+                        ['style' => 'color:inherit;text-decoration:none;']
+                    ) . '</td>';
+                    $div .= '</table>';
+                    $div .= '<hr>';
 
-                  $div .= '</div>' . "\n";
+                    $div .= '</div>' . "\n";
 
-                  if($count % 2 != 0) $div .= '</div></div>';
+                    if ($count % 2 != 0) {
+                        $div .= '</div></div>';
+                    }
 
-                  $count++;
-              }
+                    $count++;
+                }
             }
-
-          }
-
         }
+    }
 
-        if ($count %2 != 0) {
+    if ($count % 2 != 0) {
         // close last DIV if an odd number of fields
         $div .= '</div></div>';
-        }
+    }
         echo $div;
 
-
-     ?>
+    ?>
 
   </div>
     <div class="row">
@@ -76,8 +80,8 @@
 </div>
 <nav aria-label="pagination" class="float-end mt-3">
   <ul class="pagination">
-    <?= $this->Paginator->prev("<<")?>
+    <?= $this->Paginator->prev('<<')?>
     <?= !$this->Paginator->numbers() ? '<li class="page-item"><a href="#" class="page-link">1</a></li>' : $this->Paginator->numbers() ?>
-    <?= $this->Paginator->next(">>")?>
+    <?= $this->Paginator->next('>>')?>
   </ul>
 </nav>
