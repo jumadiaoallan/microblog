@@ -96,9 +96,16 @@ class CommentsController extends AppController
      */
     public function edit($id = null)
     {
-        $comment = $this->Comments->get($id, [
-            'contain' => [],
-        ]);
+
+        try {
+          $comment = $this->Comments->get($id, [
+              'contain' => [],
+          ]);
+        } catch (\Exception $e) {
+          $this->Flash->error(__('Something wrong. Please, try again.'));
+
+          return $this->redirect($this->referer());
+        }
 
         $userLoggedIn = $this->Authentication->getResult()->getData()->id;
         if ($comment->user_id != $userLoggedIn) {

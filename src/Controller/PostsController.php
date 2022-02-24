@@ -123,6 +123,15 @@ class PostsController extends AppController
             $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
             $image = $this->request->getData('image_post');
 
+            $lenght = $this->request->getData('post');
+            if (strlen($lenght) >= 141) {
+              $this->Flash->error('Invalid Lenght', [
+                  'key' => 'maxLength',
+                  'clear' => true,
+              ]);
+            }
+
+
             if (empty($this->request->getData('post')) && $image->getClientFilename() == '') {
                 $this->Flash->error(__('Something wrong. Please try again.'));
                 $this->Flash->error('Empty Post', [
@@ -135,6 +144,17 @@ class PostsController extends AppController
 
             if (!empty($image->getClientFilename())) {
                 $image = $this->request->getData('image_post');
+                $format = ['image/gif', 'image/jpeg', 'image/jpg', 'image/png'];
+
+                if (!in_array($image->getclientMediaType(), $format)) {
+
+                  $this->Flash->error('Invalid Image Format', [
+                      'key' => 'invalid',
+                      'clear' => true,
+                  ]);
+
+                  return $this->redirect($this->referer());
+                }
 
                 $imageSize = $image->getSize() * 0.000001;
 
@@ -175,17 +195,14 @@ class PostsController extends AppController
             }
 
             $post = $postTable->patchEntity($post, $data);
+
             if ($this->Posts->save($post)) {
                 $this->Flash->success(__('Successfully Posted!'));
 
                 return $this->redirect($this->referer());
             } else {
-                $this->Flash->error(__('Something wrong. Please try again.'));
 
-                  $this->Flash->error('Invalid Image Format', [
-                      'key' => 'invalid',
-                      'clear' => true,
-                  ]);
+                $this->Flash->error(__('Something wrong. Please try again.'));
 
                 return $this->redirect($this->referer());
             }

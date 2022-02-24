@@ -33,6 +33,11 @@
       This post field cannot be left empty.
     </div>
   <?php endif; ?>
+  <?php if (!empty($this->Flash->render('maxLength'))) : ?>
+    <div class="col-md-12 error-massage">
+      This post field is maximum 140 character only.
+    </div>
+  <?php endif; ?>
   <div class="col-md-6 mt-1">
     <?= $this->Form->control('image_post', ['type' => 'file','class' => 'form-control mt-2 d-none', 'id' => 'upload', 'label' => false]) ?>
     <label for="upload" class="form-control btn btn-secondary btn-sm btn-block mt-1">ADD IMAGE</label>
