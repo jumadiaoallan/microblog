@@ -13,8 +13,8 @@
 
                   $div .= '<table>';
                   $div .= '<tr>';
-                  $div .= '<td>' . $this->Html->image('upload/' . h($f->profile_path), ['alt' => 'Microblog', 'width' => '60px', 'url' => ['controller' => 'Users', 'action' => 'profile', h($f->id)]]) . '</td>';
-                  $div .= '<td>' . $this->Html->link(
+                  $div .= '<td class="post_profile" style="width:50px;">' . $this->Html->image('upload/' . h($f->profile_path), ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', h($f->id)]]) . '</td>';
+                  $div .= '<td> &nbsp;' . $this->Html->link(
                       h($f->full_name),
                       ['controller' => 'Users', 'action' => 'profile', h($f->id)],
                       ['style' => 'color:inherit;text-decoration:none;']

@@ -87,11 +87,7 @@
     <?= $this->element('post-view') ?>
   </div>
 
-
   <?= $this->element('modal') ?>
-
-  <?= $this->Html->script('photo_viewer');?>
-
 
   <div class = "modal" id ="profiles">
     <div class="modal-dialog modal-dialog-centered" >
@@ -175,7 +171,10 @@
       </div>
     </div>
   </div>
-
+  
+  <?php if ($userID == $detail['id']): ?>
+    <?= $this->Html->script('photo_viewer');?>
+  <?php endif; ?>
 
   <script type="text/javascript">
     $(document).ready(function(){
