@@ -6,7 +6,7 @@
         <tr>
           <?php foreach ($alluser as $userDetail) : ?>
                 <?php if ($userDetail->id == $post->user_id) : ?>
-          <td style="width:50px;" rowspan="2" class="post_profile p-2">
+          <td style="width:50px;height:50px;" rowspan="2" class="post_profile p-2">
                     <?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)]])?>
           </td>
           <td>
@@ -50,7 +50,7 @@
                           <tr>
                             <?php foreach ($alluser as $userDetail) : ?>
                                 <?php if ($userDetail->id == $shared->user_id) : ?>
-                            <td style="width:50px;" rowspan="2" class="p-2 post_profile">
+                            <td style="width:50px;height:50px;" rowspan="2" class="p-2 post_profile">
                                     <?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)]])?>
                             </td>
                             <td>
