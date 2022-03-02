@@ -32,7 +32,7 @@
     Image should only below 5MB.
   </div>
   <?php if (!empty($this->Flash->render('empty-post'))) : ?>
-    <div class="col-md-12 error-massage">
+    <div class="col-md-12 error-massage" id="empty-post">
       This post field cannot be left empty.
     </div>
   <?php endif; ?>
@@ -63,6 +63,7 @@ $( document ).ready(function() {
             var mb = Math.round((fsize * 0.000001));
             if (mb >= 5) {
               $("#image-size").removeClass("d-none");
+              $("#empty-post").addClass("d-none");
               $("#upload").val("");
             } else {
               $("#preview_content").removeClass("d-none");

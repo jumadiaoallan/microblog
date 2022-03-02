@@ -75,6 +75,12 @@ class UsersController extends AppController
         $userTable = TableRegistry::get('Users');
         $title = 'Verification';
         $verify = $userTable->find('all')->where(['activation_token' => $token])->first();
+
+        if (empty($verify)) {
+          echo "Invalid Varification Link";
+          exit;
+        }
+
         $tokens = $token;
         $token_generated = FrozenTime::parse($verify['generated_token'], new \DateTimeZone('Asia/Manila'));
         $expiry_token = $token_generated->addHours(1);
@@ -84,7 +90,7 @@ class UsersController extends AppController
         $get_now_date = $now->format('Y-m-d H:i:s');
 
         if ($get_now_date >= $get_expiry_token) {
-            echo "It's been 48 hours passed. This email verification is already expired";
+            echo "It's been 1 hour passed. This email verification is already expired";
             exit;
         } else {
             if ($verify['verified'] == true) {
@@ -486,15 +492,36 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $user_email = $this->request->getData('email');
 
+            if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
+              $this->Flash->error('Invalid Format', [
+              'key' => 'invalid-format',
+              'clear' => true,
+              ]);
+              $_SESSION['email'] = $user_email;
+
+              return $this->redirect($this->referer());
+            }
+
             $find = $this->Users->find()
                 ->where(['email' => $user_email])
                 ->first();
+
+            if (empty($find)) {
+              $this->Flash->error('Not Found', [
+              'key' => 'not-found',
+              'clear' => true,
+              ]);
+              $_SESSION['email'] = $user_email;
+
+              return $this->redirect($this->referer());
+            }
 
             if (empty($user_email)) {
                 $this->Flash->error('Empty Email', [
                 'key' => 'empty-email',
                 'clear' => true,
                 ]);
+                $_SESSION['email'] = $user_email;
 
                 return $this->redirect($this->referer());
             }
@@ -528,6 +555,7 @@ class UsersController extends AppController
                 }
             } else {
                 $this->Flash->error(__("You're email input is already activated!"));
+                $_SESSION['email'] = $user_email;
 
                 return $this->redirect($this->referer());
             }

@@ -8,10 +8,21 @@
             <?= $this->Form->control('email', ['class' => 'form-control',
             'style' => 'background-color:#999999;color:white;',
             'required' => false,
-            'maxlength' => false ]) ?>
+            'maxlength' => false,
+            'value' => !empty($_SESSION['email']) ? $_SESSION['email'] : null ]) ?>
             <?php if (!empty($this->Flash->render('empty-email'))) : ?>
               <div class="col-md-12 text-danger" style="font-size:12px;">
                 This field cannot be left empty
+              </div>
+            <?php endif; ?>
+            <?php if (!empty($this->Flash->render('not-found'))) : ?>
+              <div class="col-md-12 text-danger" style="font-size:12px;">
+                This email is not found.
+              </div>
+            <?php endif; ?>
+            <?php if (!empty($this->Flash->render('invalid-format'))) : ?>
+              <div class="col-md-12 text-danger" style="font-size:12px;">
+                The provided value is invalid
               </div>
             <?php endif; ?>
         </fieldset>
@@ -23,3 +34,7 @@
         <?= $this->Form->end() ?>
   </div>
 </div>
+
+<?php
+  unset($_SESSION['email']);
+ ?>
