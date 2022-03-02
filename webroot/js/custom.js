@@ -135,11 +135,7 @@ function edtcmmt(data) {
         'X-CSRF-TOKEN': $('meta[name="csrfToken"]').attr('content'),
       },
       success: function(result) {
-          if (result['message'] == 'success') {
-            $('#comment_section').load(location.href + "#comment_section");
-          } else {
-            console.log(result);
-          }
+          location.reload();
       }
     });
 

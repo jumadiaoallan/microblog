@@ -135,7 +135,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body"  style="background-color:#7f7f7f;">
-          <form >
+          <!-- <form> -->
             <label>Are you sure want to delete this comment?</label>
           <div class="row p-2" style="background-color:#7f7f7f;">
             <div class="col-6">
@@ -146,7 +146,7 @@
               <span class="form-control btn btn-secondary" data-bs-dismiss="modal">No</span>
             </div>
           </div>
-          </form>
+          <!-- </form> -->
         </div>
         </div>
       </div>

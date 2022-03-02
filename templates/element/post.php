@@ -25,11 +25,11 @@
   <?php endif; ?>
   <?php if (!empty($this->Flash->render('large-image'))) : ?>
     <div class="col-md-12 error-massage">
-      Image should only below 5MB.
+      Image should only below 2MB.
     </div>
   <?php endif; ?>
   <div class="col-md-12 error-massage d-none" id="image-size">
-    Image should only below 5MB.
+    Image should only below 2MB.
   </div>
   <?php if (!empty($this->Flash->render('empty-post'))) : ?>
     <div class="col-md-12 error-massage" id="empty-post">
@@ -61,7 +61,7 @@ $( document ).ready(function() {
     if (fi.files.length > 0) {
             var fsize = fi.files.item(0).size;
             var mb = Math.round((fsize * 0.000001));
-            if (mb >= 5) {
+            if (mb >= 2) {
               $("#image-size").removeClass("d-none");
               $("#empty-post").addClass("d-none");
               $("#upload").val("");

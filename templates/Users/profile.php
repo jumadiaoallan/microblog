@@ -171,9 +171,35 @@
       </div>
     </div>
   </div>
-  
+
+  <div class = "modal" id ="image-error">
+    <div class="modal-dialog modal-dialog-centered" >
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header" style="background-color:#7f7f7f;">
+          <?php if ($this->Identity->get('id') == $detail['id']) : ?>
+            <h4 class="modal-title">Image Error!</h4>
+          <?php endif; ?>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body"  style="background-color:#7f7f7f;">
+          <div class="row">
+            <div class="col-md-12 text-white">
+              Image size should below 2MB only.
+            </div>
+          </div>
+        </div>
+          <!-- Modal footer -->
+          <div class="modal-footer"  style="background-color:#7f7f7f;">
+              <button type="button" class="form-control btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
   <?php if ($userID == $detail['id']): ?>
-    <?= $this->Html->script('photo_viewer');?>
+    <?= $this->Html->script('photo_viewer.js?v1.1');?>
   <?php endif; ?>
 
   <script type="text/javascript">

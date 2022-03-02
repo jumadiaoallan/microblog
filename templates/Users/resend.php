@@ -15,11 +15,6 @@
                 This field cannot be left empty
               </div>
             <?php endif; ?>
-            <?php if (!empty($this->Flash->render('not-found'))) : ?>
-              <div class="col-md-12 text-danger" style="font-size:12px;">
-                This email is not found.
-              </div>
-            <?php endif; ?>
             <?php if (!empty($this->Flash->render('invalid-format'))) : ?>
               <div class="col-md-12 text-danger" style="font-size:12px;">
                 The provided value is invalid

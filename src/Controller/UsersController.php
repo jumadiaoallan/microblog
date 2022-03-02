@@ -507,10 +507,7 @@ class UsersController extends AppController
                 ->first();
 
             if (empty($find)) {
-              $this->Flash->error('Not Found', [
-              'key' => 'not-found',
-              'clear' => true,
-              ]);
+              $this->Flash->error(__('Email not found.'));
               $_SESSION['email'] = $user_email;
 
               return $this->redirect($this->referer());
@@ -521,6 +518,7 @@ class UsersController extends AppController
                 'key' => 'empty-email',
                 'clear' => true,
                 ]);
+
                 $_SESSION['email'] = $user_email;
 
                 return $this->redirect($this->referer());

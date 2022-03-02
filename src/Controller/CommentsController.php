@@ -137,13 +137,20 @@ class CommentsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete', 'ajax']);
-        $comment = $this->Comments->get($id);
+
+        $comment = $this->Comments->find()->where(['id' => $id])->first();
+
+        if (empty($comment)) {
+          $this->Flash->error(__('Something went wrong, please try again.'));
+          echo json_encode(['massage' => 'null']);
+          exit;
+        }
 
         $userLoggedIn = $this->Authentication->getResult()->getData()->id;
         if ($comment->user_id != $userLoggedIn) {
             $this->Flash->error(__('Something wrong. Please, try again.'));
-
-            return $this->redirect($this->referer());
+            echo json_encode(['massage' => 'not-user']);
+            exit;
         }
 
         if ($this->Comments->delete($comment)) {
