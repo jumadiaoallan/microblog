@@ -28,6 +28,9 @@
       Image should only below 5MB.
     </div>
   <?php endif; ?>
+  <div class="col-md-12 error-massage d-none" id="image-size">
+    Image should only below 5MB.
+  </div>
   <?php if (!empty($this->Flash->render('empty-post'))) : ?>
     <div class="col-md-12 error-massage">
       This post field cannot be left empty.
@@ -40,7 +43,7 @@
   <?php endif; ?>
   <div class="col-md-6 mt-1">
     <?= $this->Form->control('image_post', ['type' => 'file','class' => 'form-control mt-2 d-none', 'id' => 'upload', 'label' => false]) ?>
-    <label for="upload" class="form-control btn btn-secondary btn-sm btn-block mt-1">ADD IMAGE</label>
+    <label for="upload" class="form-control btn btn-secondary btn-sm btn-block mt-1" id="upload_btn">ADD IMAGE</label>
   </div>
   <div class="col-md-6 mt-1">
     <?= $this->Form->button(__('MAKE A POST'), ['class' => 'form-control btn btn-secondary btn-sm mt-1']) ?>
@@ -52,11 +55,23 @@
 $( document ).ready(function() {
 
   upload.onchange = evt => {
-    $("#preview_content").removeClass("d-none");
-    const [file] = upload.files
-      if (file) {
-        preview.src = URL.createObjectURL(file)
-      }
+
+    var fi = document.getElementById('upload');
+
+    if (fi.files.length > 0) {
+            var fsize = fi.files.item(0).size;
+            var mb = Math.round((fsize * 0.000001));
+            if (mb >= 5) {
+              $("#image-size").removeClass("d-none");
+              $("#upload").val("");
+            } else {
+              $("#preview_content").removeClass("d-none");
+              const [file] = upload.files
+                if (file) {
+                  preview.src = URL.createObjectURL(file)
+                }
+            }
+          }
     }
 
   });

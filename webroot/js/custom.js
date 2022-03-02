@@ -85,7 +85,8 @@ function addcomment(data) {
       var comment = document.getElementById(comment_id).value;
 
       if(comment.length == 0){
-          $('#'+comment_id).after('<div style="font-size:12px;color:red;">Comment is Required</div>').end();
+          $('#emptyComment').remove();
+          $('#'+comment_id).after('<div style="font-size:12px;color:red;" id="emptyComment">Comment is Required</div>').end();
       }
       else {
           $('#'+comment_id).next(".red").remove();
@@ -107,7 +108,8 @@ function addcomment(data) {
               if (pageURL.substring(0, 11) == "/posts/view") {
                 location.reload();
               } else {
-                $('#comment_section').load(location.href + "#comment_section");
+                // $('#comment_section').load(location.href + "#comment_section");
+                location.reload();
               }
             }
           });
