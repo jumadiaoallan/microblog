@@ -125,12 +125,11 @@ class PostsController extends AppController
 
             $lenght = $this->request->getData('post');
             if (strlen($lenght) >= 141) {
-              $this->Flash->error('Invalid Lenght', [
+                $this->Flash->error('Invalid Lenght', [
                   'key' => 'maxLength',
                   'clear' => true,
-              ]);
+                ]);
             }
-
 
             if (empty($this->request->getData('post')) && $image->getClientFilename() == '') {
                 $this->Flash->error(__('Something wrong. Please try again.'));
@@ -147,13 +146,12 @@ class PostsController extends AppController
                 $format = ['image/gif', 'image/jpeg', 'image/jpg', 'image/png'];
 
                 if (!in_array($image->getclientMediaType(), $format)) {
-
-                  $this->Flash->error('Invalid Image Format', [
+                    $this->Flash->error('Invalid Image Format', [
                       'key' => 'invalid',
                       'clear' => true,
-                  ]);
+                    ]);
 
-                  return $this->redirect($this->referer());
+                    return $this->redirect($this->referer());
                 }
 
                 $imageSize = $image->getSize() * 0.000001;
@@ -201,11 +199,14 @@ class PostsController extends AppController
 
                 return $this->redirect($this->referer());
             } else {
-
                 $this->Flash->error(__('Something wrong. Please try again.'));
 
                 return $this->redirect($this->referer());
             }
+        } else {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
         }
         $this->set(compact('post'));
     }
@@ -307,7 +308,13 @@ class PostsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        try {
+            $this->request->allowMethod(['post', 'delete']);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
+        }
 
         try {
             $post = $this->Posts->get($id);

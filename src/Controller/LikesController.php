@@ -22,9 +22,7 @@ class LikesController extends AppController
 
     public function index()
     {
-        $likes = $this->paginate($this->Likes);
-
-        $this->set(compact('likes'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -36,11 +34,7 @@ class LikesController extends AppController
      */
     public function view($id = null)
     {
-        $like = $this->Likes->get($id, [
-            'contain' => [],
-        ]);
-
-        $this->set(compact('like'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -136,8 +130,9 @@ class LikesController extends AppController
                 }
             }
             exit;
+        } else {
+            return $this->redirect($this->referer());
         }
-        exit;
     }
 
     /**
@@ -149,19 +144,7 @@ class LikesController extends AppController
      */
     public function edit($id = null)
     {
-        $like = $this->Likes->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $like = $this->Likes->patchEntity($like, $this->request->getData());
-            if ($this->Likes->save($like)) {
-                $this->Flash->success(__('The like has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The like could not be saved. Please, try again.'));
-        }
-        $this->set(compact('like'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -173,7 +156,14 @@ class LikesController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        try {
+            $this->request->allowMethod(['post', 'delete']);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
         $like = $this->Likes->get($id);
         if ($this->Likes->delete($like)) {
             $this->Flash->success(__('The like has been deleted.'));

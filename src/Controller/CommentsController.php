@@ -20,9 +20,7 @@ class CommentsController extends AppController
      */
     public function index()
     {
-        $comments = $this->paginate($this->Comments);
-
-        $this->set(compact('comments'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -34,11 +32,7 @@ class CommentsController extends AppController
      */
     public function view($id = null)
     {
-        $comment = $this->Comments->get($id, [
-            'contain' => [],
-        ]);
-
-        $this->set(compact('comment'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -80,11 +74,16 @@ class CommentsController extends AppController
               //end notification
 
                 echo 'success';
+                exit;
             } else {
                 echo 'failed';
+                exit;
             }
+        } else {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
         }
-        exit;
     }
 
     /**
@@ -98,13 +97,13 @@ class CommentsController extends AppController
     {
 
         try {
-          $comment = $this->Comments->get($id, [
+            $comment = $this->Comments->get($id, [
               'contain' => [],
-          ]);
+            ]);
         } catch (\Exception $e) {
-          $this->Flash->error(__('Something wrong. Please, try again.'));
+            $this->Flash->error(__('Something wrong. Please, try again.'));
 
-          return $this->redirect($this->referer());
+            return $this->redirect($this->referer());
         }
 
         $userLoggedIn = $this->Authentication->getResult()->getData()->id;
@@ -123,6 +122,10 @@ class CommentsController extends AppController
             }
 
             return $this->redirect($this->referer());
+        } else {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
         }
         $this->set(compact('comment'));
     }
@@ -136,14 +139,20 @@ class CommentsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete', 'ajax']);
+        try {
+            $this->request->allowMethod(['post', 'delete', 'ajax']);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
+        }
 
         $comment = $this->Comments->find()->where(['id' => $id])->first();
 
         if (empty($comment)) {
-          $this->Flash->error(__('Something went wrong, please try again.'));
-          echo json_encode(['massage' => 'null']);
-          exit;
+            $this->Flash->error(__('Something went wrong, please try again.'));
+            echo json_encode(['massage' => 'null']);
+            exit;
         }
 
         $userLoggedIn = $this->Authentication->getResult()->getData()->id;

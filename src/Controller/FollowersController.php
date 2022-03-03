@@ -57,11 +57,7 @@ class FollowersController extends AppController
      */
     public function view($id = null)
     {
-        $follower = $this->Followers->get($id, [
-            'contain' => [],
-        ]);
-
-        $this->set(compact('follower'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -72,9 +68,18 @@ class FollowersController extends AppController
     public function add()
     {
         $checkDB = TableRegistry::get('Followers');
+
         $following = $this->request->getData('following_user');
         $follower = $this->request->getData('follower_user');
-        $follow = $checkDB->find('all', ['withDeleted'])->where(['following_user' => $following])->andWhere(['follower_user' => $follower])->first();
+
+        try {
+            $follow = $checkDB->find('all', ['withDeleted'])->where(['following_user' => $following])->andWhere(['follower_user' => $follower])->first();
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
         $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         if (!empty($follow)) {
             $data = [
@@ -142,19 +147,8 @@ class FollowersController extends AppController
      */
     public function edit($id = null)
     {
-        $follower = $this->Followers->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $follower = $this->Followers->patchEntity($follower, $this->request->getData());
-            if ($this->Followers->save($follower)) {
-                $this->Flash->success(__('The follower has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The follower could not be saved. Please, try again.'));
-        }
-        $this->set(compact('follower'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -166,7 +160,14 @@ class FollowersController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        try {
+            $this->request->allowMethod(['post', 'delete']);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
         $follower = $this->Followers->get($id);
 
         if ($this->Followers->delete($follower)) {

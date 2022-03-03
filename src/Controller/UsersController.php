@@ -77,8 +77,8 @@ class UsersController extends AppController
         $verify = $userTable->find('all')->where(['activation_token' => $token])->first();
 
         if (empty($verify)) {
-          echo "Invalid Varification Link";
-          exit;
+            echo 'Invalid Varification Link';
+            exit;
         }
 
         $tokens = $token;
@@ -125,11 +125,7 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
-        $user = $this->Users->get($id, [
-            'contain' => ['Comments', 'Likes', 'Notifications', 'Posts'],
-        ]);
-
-        $this->set(compact('user'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -284,6 +280,10 @@ class UsersController extends AppController
               ]);
 
               return $this->redirect($this->referer());
+        } else {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
         }
     }
 
@@ -332,6 +332,10 @@ class UsersController extends AppController
               ]);
 
               return $this->redirect($this->referer());
+        } else {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
         }
     }
 
@@ -406,7 +410,14 @@ class UsersController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        try {
+            $this->request->allowMethod(['post', 'delete']);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Something wrong. Please try again.'));
+
+            return $this->redirect($this->referer());
+        }
+
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
             $this->Flash->success(__('The user has been deleted.'));
@@ -493,13 +504,13 @@ class UsersController extends AppController
             $user_email = $this->request->getData('email');
 
             if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
-              $this->Flash->error('Invalid Format', [
-              'key' => 'invalid-format',
-              'clear' => true,
-              ]);
-              $_SESSION['email'] = $user_email;
+                $this->Flash->error('Invalid Format', [
+                'key' => 'invalid-format',
+                'clear' => true,
+                ]);
+                $_SESSION['email'] = $user_email;
 
-              return $this->redirect($this->referer());
+                return $this->redirect($this->referer());
             }
 
             $find = $this->Users->find()
@@ -507,10 +518,10 @@ class UsersController extends AppController
                 ->first();
 
             if (empty($find)) {
-              $this->Flash->error(__('Email not found.'));
-              $_SESSION['email'] = $user_email;
+                $this->Flash->error(__('Email not found.'));
+                $_SESSION['email'] = $user_email;
 
-              return $this->redirect($this->referer());
+                return $this->redirect($this->referer());
             }
 
             if (empty($user_email)) {

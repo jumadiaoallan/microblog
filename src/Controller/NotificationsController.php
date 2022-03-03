@@ -83,11 +83,7 @@ class NotificationsController extends AppController
      */
     public function view($id = null)
     {
-        $notification = $this->Notifications->get($id, [
-            'contain' => ['Users'],
-        ]);
-
-        $this->set(compact('notification'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -97,18 +93,7 @@ class NotificationsController extends AppController
      */
     public function add()
     {
-        $notification = $this->Notifications->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $notification = $this->Notifications->patchEntity($notification, $this->request->getData());
-            if ($this->Notifications->save($notification)) {
-                $this->Flash->success(__('The notification has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The notification could not be saved. Please, try again.'));
-        }
-        $users = $this->Notifications->Users->find('list', ['limit' => 200])->all();
-        $this->set(compact('notification', 'users'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -120,20 +105,7 @@ class NotificationsController extends AppController
      */
     public function edit($id = null)
     {
-        $notification = $this->Notifications->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $notification = $this->Notifications->patchEntity($notification, $this->request->getData());
-            if ($this->Notifications->save($notification)) {
-                $this->Flash->success(__('The notification has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The notification could not be saved. Please, try again.'));
-        }
-        $users = $this->Notifications->Users->find('list', ['limit' => 200])->all();
-        $this->set(compact('notification', 'users'));
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -145,14 +117,6 @@ class NotificationsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $notification = $this->Notifications->get($id);
-        if ($this->Notifications->delete($notification)) {
-            $this->Flash->success(__('The notification has been deleted.'));
-        } else {
-            $this->Flash->error(__('The notification could not be deleted. Please, try again.'));
-        }
-
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->referer());
     }
 }
