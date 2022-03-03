@@ -7,15 +7,15 @@
       </div>
         <?php if ($notifications->count()) : ?>
             <?php foreach ($notifications as $noti) : ?>
-            <div class="row mt-2">
-              <div class="col-md-12 card" style="background-color:#999999;color:white;">
+            <div class="row">
+              <div class="col-md-12 card p-2" style="background-color:#999999;color:white;">
                 <?php if ($this->Identity->get('id') == $noti->user_id) : ?>
                     <?php foreach ($user as $users) : ?>
                         <?php if ($users->id == $noti->user_from) : ?>
                         <table>
                           <tr>
-                            <td style=" width:42px;" rowspan="2" class="p-2">
-                              <?= $this->Html->image('upload/' . h($users->profile_path), ['alt' => 'Microblog', 'width' => '40px', 'url' => ['controller' => 'Users', 'action' => 'profile', h($users->id)]])?>
+                            <td style="width:60px;height:60px" rowspan="2" class="follow_profile">
+                              <?= $this->Html->image('upload/' . h($users->profile_path), ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', h($users->id)]])?>
                             </td>
                             <td>
                               <?= $this->Html->link(
