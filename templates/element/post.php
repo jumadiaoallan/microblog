@@ -6,7 +6,7 @@
 </style>
 
 <div class="col-md-12">
-  <?= $this->Form->create($post, ['url' => ['controller' => 'Posts','action' => 'add'], 'type' => 'file', 'novalidate' => true]) ?>
+  <?= $this->Form->create($post, ['url' => ['controller' => 'Posts','action' => 'add'], 'type' => 'file', 'novalidate' => true, 'id' => 'makepost']) ?>
   <?= $this->Form->control('post', ['type' => 'textarea', 'rows' => 3, 'class' => 'form-control mt-2','label' => false,
    'style' => 'min-width: 100%; background-color:#999999;color:white;',
    'placeholder' => 'WRITE A POST',
@@ -37,7 +37,7 @@
     </div>
   <?php endif; ?>
   <?php if (!empty($this->Flash->render('maxLength'))) : ?>
-    <div class="col-md-12 error-massage">
+    <div class="col-md-12 error-massage" id="max-text">
       This post field is maximum 140 character only.
     </div>
   <?php endif; ?>
@@ -46,7 +46,7 @@
     <label for="upload" class="form-control btn btn-secondary btn-sm btn-block mt-1" id="upload_btn">ADD IMAGE</label>
   </div>
   <div class="col-md-6 mt-1">
-    <?= $this->Form->button(__('MAKE A POST'), ['class' => 'form-control btn btn-secondary btn-sm mt-1']) ?>
+    <?= $this->Form->button(__('MAKE A POST'), ['class' => 'form-control btn btn-secondary btn-sm mt-1', 'id' => 'make_post']) ?>
   </div>
   <?= $this->Form->end() ?>
 </div>
@@ -65,6 +65,7 @@ $( document ).ready(function() {
               $("#image-size").removeClass("d-none");
               $("#empty-post").addClass("d-none");
               $("#invalid-format").addClass("d-none");
+              $("#max-text").addClass("d-none");
               $("#upload").val("");
             } else {
               $("#preview_content").removeClass("d-none");
@@ -75,6 +76,15 @@ $( document ).ready(function() {
             }
           }
     }
+
+    make_post.onclick = evt => {
+        var btn_submit = $('#make_post');
+        var loading = '<i class="fa fa-spinner fa-spin"></i>';
+        btn_submit.html(loading);
+        btn_submit.prop('disabled', true);
+        $("#makepost").submit();
+      }
+
 
   });
 </script>

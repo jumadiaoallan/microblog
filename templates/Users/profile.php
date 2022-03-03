@@ -102,7 +102,7 @@
         <!-- Modal body -->
         <div class="modal-body"  style="background-color:#7f7f7f;">
           <?php if ($userID == $detail['id']) : ?>
-                <?= $this->Form->create($photo, ['url' => ['controller' => 'Users', 'action' => 'profilepic', $userID], 'type' => 'file']) ?>
+                <?= $this->Form->create($photo, ['url' => ['controller' => 'Users', 'action' => 'profilepic', $userID], 'type' => 'file', 'id' => 'profileForm']) ?>
           <?php endif; ?>
           <div class="post_photo">
           <?=$this->Html->image('upload/' . h($detail['profile_path']), ['class' => 'img-fluid', 'id' => 'profile']);?>
@@ -119,7 +119,7 @@
         <?php if ($userID == $detail['id']) : ?>
           <!-- Modal footer -->
           <div class="modal-footer"  style="background-color:#7f7f7f;">
-              <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
+              <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2', 'id' => 'btnProfile']) ?>
               <?= $this->Form->end() ?>
           </div>
         <?php endif; ?>
@@ -144,7 +144,7 @@
         <!-- Modal body -->
         <div class="modal-body"  style="background-color:#7f7f7f;">
           <?php if ($userID == $detail['id']) : ?>
-                <?= $this->Form->create($photo, ['url' => ['controller' => 'Users', 'action' => 'banner', $userID], 'type' => 'file']) ?>
+                <?= $this->Form->create($photo, ['url' => ['controller' => 'Users', 'action' => 'banner', $userID], 'type' => 'file', 'id' => 'bannerForm']) ?>
           <?php endif; ?>
 
           <div class="post_photo">
@@ -164,7 +164,7 @@
         </div>
         <?php if ($userID == h($detail['id'])) : ?>
           <div class="modal-footer"  style="background-color:#7f7f7f;">
-              <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
+              <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2', 'id' => 'btnBanner']) ?>
               <?= $this->Form->end() ?>
           </div>
         <?php endif; ?>
@@ -212,6 +212,27 @@
         }
 
         ?>
+
+        $( document ).ready(function() {
+
+            btnBanner.onclick = evt => {
+                var btn_submit = $('#btnBanner');
+                var loading = '<i class="fa fa-spinner fa-spin"></i>';
+                btn_submit.html(loading);
+                btn_submit.prop('disabled', true);
+                $("#bannerForm").submit();
+              }
+
+              btnProfile.onclick = evt => {
+                  var btn_submit = $('#btnProfile');
+                  var loading = '<i class="fa fa-spinner fa-spin"></i>';
+                  btn_submit.html(loading);
+                  btn_submit.prop('disabled', true);
+                  $("#profileForm").submit();
+                }
+
+          });
+
 
 
     });

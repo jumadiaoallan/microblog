@@ -13,6 +13,7 @@
 <?= $this->Html->script('https://code.jquery.com/jquery-3.6.0.js'); ?>
 <?= $this->Html->script('https://code.jquery.com/ui/1.13.1/jquery-ui.js'); ?>
 <?= $this->Html->css('style.css?v=1.0s');?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body style="background-color: #7f7f7f;" id="comment_section">
 <div class="m-4">
@@ -27,7 +28,7 @@
 
 
 </body>
-<?= $this->Html->script('custom.js?v=1.9');?>
+<?= $this->Html->script('custom.js?v=2.0');?>
 <script type="text/javascript">
   var isLogged_in = "<?= h($this->Identity->get('id'))?>";
 </script>

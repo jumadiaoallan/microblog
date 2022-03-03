@@ -190,7 +190,7 @@
         <textarea name="comment" id="<?= 'comment_' . h($post->id) ?>" rows="3" class="form-control mt-2" style="min-width: 100%; background-color:#999999;color:white;" placeholder="WRITE A COMMENT"></textarea>
       </div>
       <div class="col-md-3 offset-md-9">
-        <button name="btnComment" class="form-control btn btn-secondary btn-sm mt-2" data-pid="<?= h($post->id) ?>" data-uid="<?= h($this->Identity->get('id'))?>" onclick="addcomment(this)">
+        <button name="btnComment" id="<?= 'btncomment_' . h($post->id) ?>" class="form-control btn btn-secondary btn-sm mt-2" data-pid="<?= h($post->id) ?>" data-uid="<?= h($this->Identity->get('id'))?>" onclick="addcomment(this)">
           SUBMIT
         </button>
       </div>

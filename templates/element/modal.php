@@ -66,7 +66,7 @@
 
       <!-- Modal footer -->
       <div class="modal-footer"  style="background-color:#7f7f7f;">
-        <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2']) ?>
+        <?= $this->Form->button(__('Submit'), ['class' => 'form-control btn btn-secondary btn-md mt-2', 'id' => 'editPostSubmit']) ?>
         <?= $this->Form->end() ?>
       </div>
 
@@ -88,7 +88,7 @@
           <label>Are you sure want to delete this post?</label>
         <div class="row p-2" style="background-color:#7f7f7f;">
           <div class="col-6">
-            <button type="submit" class="form-control btn btn-secondary" name="submit">Yes</button>
+            <button type="submit" class="form-control btn btn-secondary" name="submit" data-bs-dismiss="modal" id="delete_post">Yes</button>
           </div>
           <div class="col-6">
             <span class="form-control btn btn-secondary" data-bs-dismiss="modal">No</span>
@@ -114,7 +114,7 @@
               <?= $this->Form->control('comment', ['type' => 'textarea', 'rows' => 3, 'class' => 'form-control mt-2','label' => false, 'style' => 'min-width: 100%; background-color:#999999;color:white;', 'id' => 'editC']) ?>
             <div class="row p-2" style="background-color:#7f7f7f;">
               <div class="col-6">
-                <button type="submit" class="form-control btn btn-secondary">SAVE CHANGES</button>
+                <button type="submit" class="form-control btn btn-secondary" id="editcommentbtn">SAVE CHANGES</button>
               </div>
               <div class="col-6">
                 <span class="form-control btn btn-secondary" data-bs-dismiss="modal">CANCEL</span>
@@ -140,7 +140,7 @@
           <div class="row p-2" style="background-color:#7f7f7f;">
             <div class="col-6">
               <input type="hidden" id="comment_ids" value="">
-              <button type="submit" class="form-control btn btn-secondary" onclick="deleteComment()">Yes</button>
+              <button type="submit" class="form-control btn btn-secondary" data-bs-dismiss="modal" onclick="deleteComment()">Yes</button>
             </div>
             <div class="col-6">
               <span class="form-control btn btn-secondary" data-bs-dismiss="modal">No</span>
@@ -162,7 +162,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body"  style="background-color:#7f7f7f;">
-        <?= $this->Form->create(null, ['url' => ['controller' => 'Posts','action' => 'share'], 'novalidate' => true]) ?>
+        <?= $this->Form->create(null, ['url' => ['controller' => 'Posts','action' => 'share'], 'novalidate' => true, 'id' => 'shareForm']) ?>
         <?= $this->Form->control('post', ['type' => 'textarea',
          'rows' => 3,
          'class' => 'form-control mt-2',
@@ -200,7 +200,7 @@
           <div class="col-6">
             <?= $this->Form->control('user_id', ['type' => 'hidden', 'value' => h($this->Identity->get('id'))]) ?>
             <?= $this->Form->control('post_id', ['type' => 'hidden', 'id' => 'post_id']) ?>
-            <button type="submit" class="form-control btn btn-secondary">SHARE POST</button>
+            <button type="submit" class="form-control btn btn-secondary" id="btnShare">SHARE POST</button>
           </div>
           <div class="col-6">
             <span class="form-control btn btn-secondary" data-bs-dismiss="modal">CANCEL</span>
@@ -211,3 +211,36 @@
       </div>
     </div>
     </div>
+
+    <script type="text/javascript">
+
+
+      $( document ).ready(function() {
+
+          editPostSubmit.onclick = evt => {
+              var btn_submit = $('#editPostSubmit');
+              var loading = '<i class="fa fa-spinner fa-spin"></i>';
+              btn_submit.html(loading);
+              btn_submit.prop('disabled', true);
+              $("#edit_form").submit();
+            }
+
+            editcommentbtn.onclick = evt => {
+                var btn_submit = $('#editcommentbtn');
+                var loading = '<i class="fa fa-spinner fa-spin"></i>';
+                btn_submit.html(loading);
+                btn_submit.prop('disabled', true);
+                $("#comment_edit").submit();
+              }
+
+            btnShare.onclick = evt => {
+                var btn_submit = $('#btnShare');
+                var loading = '<i class="fa fa-spinner fa-spin"></i>';
+                btn_submit.html(loading);
+                btn_submit.prop('disabled', true);
+                $("#shareForm").submit();
+              }
+
+        });
+
+    </script>

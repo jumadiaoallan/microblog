@@ -83,12 +83,16 @@ function addcomment(data) {
       var user_id = $(data).data('uid');
       var comment_id = "comment_"+post_id;
       var comment = document.getElementById(comment_id).value;
+      var btncomment = "btncomment_"+post_id;
+      var loading = '<i class="fa fa-spinner fa-spin"></i>';
 
       if(comment.length == 0){
           $('#emptyComment').remove();
           $('#'+comment_id).after('<div style="font-size:12px;color:red;" id="emptyComment">Comment is Required</div>').end();
       }
       else {
+          $('#'+btncomment).html(loading);
+          $('#'+btncomment).prop('disabled', true);
           $('#'+comment_id).next(".red").remove();
 
           $.ajax({

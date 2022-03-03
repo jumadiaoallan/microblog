@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <?= $this->Html->meta('img', 'img/icon.PNG', ['type' => 'icon']) ?>
     <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css') ?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <?= $this->Html->script('https://code.jquery.com/jquery-3.6.0.js'); ?>
+    <?= $this->Html->script('https://code.jquery.com/ui/1.13.1/jquery-ui.js'); ?>
     <title><?= $title ?></title>
   </head>
   <body  style="background-color: #7f7f7f;">
