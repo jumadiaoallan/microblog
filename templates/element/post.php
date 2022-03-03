@@ -19,7 +19,7 @@
     <img src="" class="img-fluid mt-2" id="preview" />
   </div>
   <?php if (!empty($this->Flash->render('invalid'))) : ?>
-    <div class="col-md-12 error-massage">
+    <div class="col-md-12 error-massage" id="invalid-format">
       Invalid Image Format
     </div>
   <?php endif; ?>
@@ -64,6 +64,7 @@ $( document ).ready(function() {
             if (mb >= 2) {
               $("#image-size").removeClass("d-none");
               $("#empty-post").addClass("d-none");
+              $("#invalid-format").addClass("d-none");
               $("#upload").val("");
             } else {
               $("#preview_content").removeClass("d-none");

@@ -13,7 +13,7 @@
 
                   $div .= '<table>';
                   $div .= '<tr>';
-                  $div .= '<td class="follow_profile" style="width:60px;height:60px;">' . $this->Html->image('upload/' . h($f->profile_path), ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', h($f->id)]]) . '</td>';
+                  $div .= '<td class="follow_profile" style="width:60px;height:60px">' . $this->Html->image('upload/' . h($f->profile_path), ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', h($f->id)]]) . '</td>';
                   $div .= '<td> &nbsp;' . $this->Html->link(
                       h($f->full_name),
                       ['controller' => 'Users', 'action' => 'profile', h($f->id)],

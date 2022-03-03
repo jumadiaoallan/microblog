@@ -12,7 +12,7 @@
 <?= $this->Html->script('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'); ?>
 <?= $this->Html->script('https://code.jquery.com/jquery-3.6.0.js'); ?>
 <?= $this->Html->script('https://code.jquery.com/ui/1.13.1/jquery-ui.js'); ?>
-<?= $this->Html->css('style');?>
+<?= $this->Html->css('style.css?v=1.0s');?>
 </head>
 <body style="background-color: #7f7f7f;" id="comment_section">
 <div class="m-4">
