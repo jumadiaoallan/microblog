@@ -75,10 +75,15 @@ class PostsController extends AppController
     {
         if ($this->request->is('ajax')) {
             $userDetails = TableRegistry::get('Users');
-            $post = $this->Posts->get($id, ['contain' => ['Likes', 'Comments'],]);
             $alluser = $userDetails->find('all')->toArray();
-            echo json_encode(['post' => $post, 'users' => $alluser]);
-            exit;
+            try {
+              $post = $this->Posts->get($id, ['contain' => ['Likes', 'Comments'],]);
+              echo json_encode(['post' => $post, 'users' => $alluser, 'status' => 'found']);
+              exit;
+            } catch (\Exception $e) {
+              echo json_encode(['post' => ['comments' => null, 'likes' => null], 'users' => null, 'status' => 'not found']);
+              exit;
+            }
         } else {
             $this->viewBuilder()->setLayout('main');
 

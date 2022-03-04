@@ -155,7 +155,6 @@ function edtcmmt(data) {
   // share
 function share(data) {
   var id = $(data).data('postid');
-
   $.ajax({
     url: "/posts/view/"+id,
     type: "JSON",
@@ -164,46 +163,60 @@ function share(data) {
       'X-CSRF-TOKEN': $('meta[name="csrfToken"]').attr('content'),
     },
     success: function(result) {
+
       let arr = $.parseJSON(result);
-      let users = arr['users'];
-      var profile = $("#sprofile");
+      var post = $("#spost");
       var fullname = $("#sname");
       var date = $("#sdate");
-      var post = $("#spost");
       var image = $("#simage");
-      var post_id = $("#post_id");
+      var profile = $("#sprofile");
+      if (arr['status'] == 'found') {
+        let users = arr['users'];
+        var post_id = $("#post_id");
+        users.forEach(function(item) {
+            if (arr['post']['user_id'] == item['id']) {
+              var d = new Date(arr['post']['created']);
+              var day = d.getDate();
+              var month = d.getMonth() + 1;
+              var year = d.getFullYear();
+              if (day < 10) {
+                  day = "0" + day;
+              }
+              if (month < 10) {
+                  month = "0" + month;
+              }
+              var date_formatted = day + "/" + month + "/" + year;
 
-      users.forEach(function(item) {
-          if (arr['post']['user_id'] == item['id']) {
-            var d = new Date(arr['post']['created']);
-            var day = d.getDate();
-            var month = d.getMonth() + 1;
-            var year = d.getFullYear();
-            if (day < 10) {
-                day = "0" + day;
+              profile.attr("src","../../img/upload/"+item['profile_path']);
+              fullname.html(item['full_name']);
+              date.html(date_formatted);
+              post.html(htmlEncode(arr['post']['post']));
+              post_id.val(arr['post']['id']);
+
+              if (arr['post']['image_path'] != null) {
+                image.removeClass('d-none');
+                image.attr("src","../../img/post_upload/"+arr['post']['image_path']);
+              } else {
+                image.addClass('d-none');
+              }
             }
-            if (month < 10) {
-                month = "0" + month;
-            }
-            var date_formatted = day + "/" + month + "/" + year;
-
-            profile.attr("src","../../img/upload/"+item['profile_path']);
-            fullname.html(item['full_name']);
-            date.html(date_formatted);
-            post.html(htmlEncode(arr['post']['post']));
-            post_id.val(arr['post']['id']);
-
-            if (arr['post']['image_path'] != null) {
-              image.removeClass('d-none');
-              image.attr("src","../../img/post_upload/"+arr['post']['image_path']);
-            } else {
-              image.addClass('d-none');
-            }
-          }
-      });
-
-
-
+            $('#btnShareCancel').addClass('col-6');
+            $('#btnShareCancel').removeClass('col-12');
+            $('#btnShare').removeClass('d-none');
+            profile.removeClass('d-none');
+            profile.removeClass('d-none');
+        });
+      } else {
+        fullname.html("");
+        date.html("");
+        var content = "<center>Share Content Not Found</center>";
+        post.html(content);
+        profile.addClass('d-none');
+        image.addClass('d-none');
+        $('#btnShare').addClass('d-none');
+        $('#btnShareCancel').removeClass('col-6');
+        $('#btnShareCancel').addClass('col-12');
+      }
 
     }
   });

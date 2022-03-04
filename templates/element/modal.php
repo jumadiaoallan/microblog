@@ -202,7 +202,7 @@
             <?= $this->Form->control('post_id', ['type' => 'hidden', 'id' => 'post_id']) ?>
             <button type="submit" class="form-control btn btn-secondary" id="btnShare">SHARE POST</button>
           </div>
-          <div class="col-6">
+          <div class="col-6" id="btnShareCancel">
             <span class="form-control btn btn-secondary" data-bs-dismiss="modal">CANCEL</span>
           </div>
         </div>
