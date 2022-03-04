@@ -215,21 +215,28 @@
 
         $( document ).ready(function() {
 
-            btnBanner.onclick = evt => {
-                var btn_submit = $('#btnBanner');
+          <?php
+            if ($userID == $detail['id']) {
+          ?>
+          btnBanner.onclick = evt => {
+              var btn_submit = $('#btnBanner');
+              var loading = '<i class="fa fa-spinner fa-spin"></i>';
+              btn_submit.html(loading);
+              btn_submit.prop('disabled', true);
+              $("#bannerForm").submit();
+            }
+
+            btnProfile.onclick = evt => {
+                var btn_submit = $('#btnProfile');
                 var loading = '<i class="fa fa-spinner fa-spin"></i>';
                 btn_submit.html(loading);
                 btn_submit.prop('disabled', true);
-                $("#bannerForm").submit();
+                $("#profileForm").submit();
               }
+          <?php
+            }
+           ?>
 
-              btnProfile.onclick = evt => {
-                  var btn_submit = $('#btnProfile');
-                  var loading = '<i class="fa fa-spinner fa-spin"></i>';
-                  btn_submit.html(loading);
-                  btn_submit.prop('disabled', true);
-                  $("#profileForm").submit();
-                }
 
           });
 
