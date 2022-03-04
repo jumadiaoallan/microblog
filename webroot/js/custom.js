@@ -170,9 +170,10 @@ function share(data) {
       var date = $("#sdate");
       var image = $("#simage");
       var profile = $("#sprofile");
+      var post_id = $("#post_id");
       if (arr['status'] == 'found') {
         let users = arr['users'];
-        var post_id = $("#post_id");
+
         users.forEach(function(item) {
             if (arr['post']['user_id'] == item['id']) {
               var d = new Date(arr['post']['created']);
@@ -216,6 +217,7 @@ function share(data) {
         $('#btnShare').addClass('d-none');
         $('#btnShareCancel').removeClass('col-6');
         $('#btnShareCancel').addClass('col-12');
+        post_id.val(null);
       }
 
     }

@@ -354,6 +354,13 @@ class PostsController extends AppController
         $post = $this->Posts->newEmptyEntity();
         $now = FrozenTime::parse('Asia/Manila')->i18nFormat('yyyy-MM-dd HH:mm:ss');
         if ($this->request->is('post')) {
+
+            if (empty($this->request->getData('post_id'))) {
+              $this->Flash->error(__('Something wrong. Please try again.'));
+
+              return $this->redirect($this->referer());
+            }
+
             $data = [
             'user_id' => $this->request->getData('user_id'),
             'post' => $this->request->getData('post'),
