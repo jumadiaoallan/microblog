@@ -227,13 +227,24 @@ $(document).ready(function(){
     }
 
     post_edit.onchange = evt => {
-      const [file] = post_edit.files
-      if (file) {
-        $("#edit_preview").removeClass("d-none");
-        $("#btn_remove").removeClass("d-none");
-        $("#btn").text("EDIT IMAGE");
-        image_edit.src = URL.createObjectURL(file);
-      }
+
+      var fi = document.getElementById('post_edit');
+      if (fi.files.length > 0) {
+                var fsize = fi.files.item(0).size;
+                var mb = Math.round((fsize * 0.000001));
+                if (mb >= 2) {
+                  $("#imageEdit-error").modal("show");
+                  $('#post_edit').val("");
+                } else {
+                  const [file] = post_edit.files
+                  if (file) {
+                    $("#edit_preview").removeClass("d-none");
+                    $("#btn_remove").removeClass("d-none");
+                    $("#btn").text("EDIT IMAGE");
+                    image_edit.src = URL.createObjectURL(file);
+                  }
+                }
+              }
       }
 
 })

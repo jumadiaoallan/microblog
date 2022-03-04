@@ -245,11 +245,14 @@ class PostsController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $image = $this->request->getData('image_post');
-
-            if ($image->getClientFilename() == '' && $this->request->getData('post') == null && $this->request->getData('remove_image') != null) {
+            if ($image->getClientFilename() == '' && $this->request->getData('post') == '' && $this->request->getData('remove_image') == '') {
                 $this->Flash->error(__('Post field for edit should not empty.'));
 
                 return $this->redirect($this->referer());
+            } elseif ($image->getClientFilename() == '' && $this->request->getData('post') == '' && $this->request->getData('remove_image') != '') {
+              $this->Flash->error(__('Post field for edit should not empty.'));
+
+              return $this->redirect($this->referer());
             }
 
             if (!empty($image->getClientFilename())) {

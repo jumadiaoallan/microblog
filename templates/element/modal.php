@@ -212,6 +212,30 @@
     </div>
     </div>
 
+    <div class = "modal" id ="imageEdit-error">
+      <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header" style="background-color:#7f7f7f;">
+              <h4 class="modal-title">Image Error!</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body"  style="background-color:#7f7f7f;">
+            <div class="row">
+              <div class="col-md-12 text-white">
+                Image size should below 2MB only.
+              </div>
+            </div>
+          </div>
+            <!-- Modal footer -->
+            <div class="modal-footer"  style="background-color:#7f7f7f;">
+                <button type="button" class="form-control btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+            </div>
+        </div>
+      </div>
+    </div>
+
     <script type="text/javascript">
 
 
@@ -240,6 +264,29 @@
                 btn_submit.prop('disabled', true);
                 $("#shareForm").submit();
               }
+
+            // post_edit.onchange = evt => {
+            //
+            //   var fi = document.getElementById('post_edit');
+            //
+            //   if (fi.files.length > 0) {
+            //           var fsize = fi.files.item(0).size;
+            //           var mb = Math.round((fsize * 0.000001));
+            //           if (mb >= 2) {
+            //             $("#image-size").removeClass("d-none");
+            //             $("#empty-post").addClass("d-none");
+            //             $("#invalid-format").addClass("d-none");
+            //             $("#max-text").addClass("d-none");
+            //             $("#upload").val("");
+            //           } else {
+            //             $("#preview_content").removeClass("d-none");
+            //             const [file] = post_edit.files
+            //               if (file) {
+            //                 preview.src = URL.createObjectURL(file)
+            //               }
+            //           }
+            //         }
+            //   }
 
         });
 

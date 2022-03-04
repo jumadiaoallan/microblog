@@ -15,6 +15,7 @@ function editPost(data) {
 
     if (image != '') {
       $("#edit_preview").removeClass("d-none");
+      $("#btn_remove").removeClass("d-none");
       $("#btn").text("EDIT IMAGE");
       $("#image_edit").attr("src", '../../img/post_upload/'+image);
     } else {
