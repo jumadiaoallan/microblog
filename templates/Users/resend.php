@@ -3,7 +3,7 @@
         <center>
         <?php echo $this->Html->image('logo.PNG', ['alt' => 'Microblog', 'border' => '1', 'width' => '250px', 'class' => 'mb-2']); ?>
         </center>
-        <?= $this->Form->create($find, ['url' => ['controller' => 'Users','action' => 'resend'], 'novalidate' => true]) ?>
+        <?= $this->Form->create($find, ['url' => ['controller' => 'Users','action' => 'resend'], 'novalidate' => true, 'id' => 'resendForm']) ?>
         <fieldset>
             <?= $this->Form->control('email', ['class' => 'form-control',
             'style' => 'background-color:#999999;color:white;',
@@ -23,7 +23,7 @@
         </fieldset>
         <div class="row mt-2">
           <div class="col-12">
-            <?= $this->Form->button(__('Resend Email Verification'), ['class' => 'form-control btn btn-secondary btn-md']); ?>
+            <?= $this->Form->button(__('Resend Email Verification'), ['class' => 'form-control btn btn-secondary btn-md', 'id' => 'btnResend']); ?>
           </div>
         </div>
         <?= $this->Form->end() ?>
@@ -33,3 +33,17 @@
 <?php
   unset($_SESSION['email']);
  ?>
+ <script type="text/javascript">
+ $( document ).ready(function() {
+
+   btnResend.onclick = evt => {
+       var btn_submit = $('#btnResend');
+       var loading = '<i class="fa fa-spinner fa-spin"></i>';
+       btn_submit.html(loading);
+       btn_submit.prop('disabled', true);
+       $("#resendForm").submit();
+     }
+
+
+   });
+ </script>
