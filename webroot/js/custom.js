@@ -177,7 +177,7 @@ function share(data) {
 
         users.forEach(function(item) {
             if (arr['post']['user_id'] == item['id']) {
-              var d = new Date(arr['post']['created']);
+              var d = new Date(arr['post']['created_at']);
               var day = d.getDate();
               var month = d.getMonth() + 1;
               var year = d.getFullYear();
@@ -190,7 +190,7 @@ function share(data) {
               var date_formatted = day + "/" + month + "/" + year;
 
               profile.attr("src","../../img/upload/"+item['profile_path']);
-              fullname.html(item['full_name']);
+              fullname.html(item['first_name'] + " " + item['last_name']);
               date.html(date_formatted);
               post.html(htmlEncode(arr['post']['post']));
               post_id.val(arr['post']['id']);

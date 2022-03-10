@@ -12,7 +12,11 @@
             <?= $this->Form->create($user, ['novalidate' => true]) ?>
             <fieldset>
                 <?php
-                    echo $this->Form->control('full_name', ['class' => 'form-control mt-2',
+                    echo $this->Form->control('first_name', ['class' => 'form-control mt-2',
+                    'style' => 'background-color:#999999;color:white;',
+                    'required' => false,
+                    'maxlength' => false ]);
+                    echo $this->Form->control('last_name', ['class' => 'form-control mt-2',
                     'style' => 'background-color:#999999;color:white;',
                     'required' => false,
                     'maxlength' => false ]);

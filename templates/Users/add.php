@@ -12,7 +12,11 @@
             <?= $this->Form->create($user, ['novalidate' => true, 'id' => 'registerForm']) ?>
 
                 <div class="col-md-12 col-sm-12">
-                  <?= $this->Form->control('full_name', ['class' => 'form-control mt-2' ,'style' => 'background-color:#999999;color:white;',
+                  <?= $this->Form->control('first_name', ['class' => 'form-control mt-2' ,'style' => 'background-color:#999999;color:white;',
+                    'required' => false, 'maxlength' => false])?>
+                </div>
+                <div class="col-md-12 col-sm-12">
+                  <?= $this->Form->control('last_name', ['class' => 'form-control mt-2' ,'style' => 'background-color:#999999;color:white;',
                     'required' => false, 'maxlength' => false])?>
                 </div>
                 <div class="col-md-12 col-sm-12">

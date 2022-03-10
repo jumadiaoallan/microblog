@@ -13,8 +13,8 @@ use Cake\ORM\Entity;
  * @property string $image_path
  * @property string $post
  * @property int $shared_post_id
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \Cake\I18n\FrozenTime|null $created_at
+ * @property \Cake\I18n\FrozenTime|null $updated_at
  * @property \Cake\I18n\FrozenTime|null $deleted
  *
  * @property \App\Model\Entity\User $user
@@ -37,8 +37,8 @@ class Post extends Entity
         'image_path' => true,
         'post' => true,
         'shared_post_id' => true,
-        'created' => true,
-        'modified' => true,
+        'created_at' => true,
+        'updated_at' => true,
         'deleted' => true,
         'user' => true,
         'shared_user' => true,

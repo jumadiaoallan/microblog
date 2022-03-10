@@ -19,7 +19,7 @@
                             </td>
                             <td>
                               <?= $this->Html->link(
-                                  $users->full_name,
+                                  h($users->first_name) . " " . h($users->last_name),
                                   ['controller' => 'Users', 'action' => 'profile', h($users->id)],
                                   ['style' => 'color:inherit;text-decoration:none;']
                               ); ?>

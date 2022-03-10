@@ -20,7 +20,7 @@
     </center>
   </div>
   <div class="col-md-12 text-center mt-2 text-white">
-    <h4><?= h($detail['full_name']) ?></h4>
+    <h4><?= h($detail['first_name']) . " " . h($detail['last_name']) ?></h4>
       <?php if ($this->Identity->get('id') == $detail['id']) : ?>
             <?=$this->Html->link(
                 'Edit Profile',

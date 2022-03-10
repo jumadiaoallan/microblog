@@ -91,16 +91,28 @@ class UsersTable extends Table
             ->notEmptyString('username');
 
         $validator
-            ->scalar('full_name')
-            ->maxLength('full_name', 100)
-            ->requirePresence('full_name', 'create')
-            ->notEmptyString('full_name')
-            ->add('full_name', [
+            ->scalar('first_name')
+            ->maxLength('first_name', 100)
+            ->requirePresence('first_name', 'create')
+            ->notEmptyString('first_name')
+            ->add('first_name', [
               'custom' => [
                 'rule' => ['custom', '/^[a-z ]*$/i'],
                 'message' => 'Alphabetical characters only',
               ],
             ]);
+
+            $validator
+                ->scalar('last_name')
+                ->maxLength('last_name', 100)
+                ->requirePresence('last_name', 'create')
+                ->notEmptyString('last_name')
+                ->add('last_name', [
+                  'custom' => [
+                    'rule' => ['custom', '/^[a-z ]*$/i'],
+                    'message' => 'Alphabetical characters only',
+                  ],
+                ]);
 
         $validator
             ->requirePresence('birthday', 'create')

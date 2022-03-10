@@ -142,7 +142,8 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $userTable = TableRegistry::get('Users');
             $hasher = new DefaultPasswordHasher();
-            $full_name = $this->request->getData('full_name');
+            $first_name = $this->request->getData('first_name');
+            $last_name = $this->request->getData('last_name');
             $email = $this->request->getData('email');
             $password = $this->request->getData('password');
             $confirm_password = $this->request->getData('confirm_password');
@@ -150,7 +151,8 @@ class UsersController extends AppController
             $activation_token = Security::hash(Security::randomBytes(32));
             $data = [
             'username' => $this->request->getData('username'),
-            'full_name' => $full_name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $email,
             'gender' => $this->request->getData('gender'),
             'birthday' => $this->request->getData('birthday'),
@@ -161,8 +163,8 @@ class UsersController extends AppController
             'verified' => false,
             'activation_token' => $activation_token,
             'generated_token' => $now,
-            'created' => $now,
-            'modified' => $now,
+            'created_at' => $now,
+            'updated_at' => $now,
             ];
             $user = $userTable->newEntity($data);
 
@@ -171,7 +173,7 @@ class UsersController extends AppController
 
                 $mailer = new Mailer('default');
                 $mailer->setFrom(['allanjumadiao.yns@gmail.com' => 'John Doe']);
-                $mailer->setViewVars(['full_name' => $full_name,'token' => $activation_token])
+                $mailer->setViewVars(['full_name' => $first_name . " " . $last_name, 'token' => $activation_token])
                 ->setTo($email)
                 ->setEmailFormat('html')
                 ->setSubject('Verify New Account')
@@ -216,7 +218,7 @@ class UsersController extends AppController
                       ->andWhere(['user_from !=' => $loggedID['id']])
                       ->count();
 
-        $header = ['title' => $detail['full_name'], 'notification' => $notification];
+        $header = ['title' => $detail['first_name'] ." ".  $detail['last_name'], 'notification' => $notification];
 
         $followers = $follower->find('all', ['withDeleted'])
                   ->where(['following_user' => $id])
@@ -226,7 +228,7 @@ class UsersController extends AppController
 
         $users = $userPost->find()
           ->contain(['Likes', 'Comments'])
-          ->order(['Posts.created' => 'DESC'])
+          ->order(['Posts.created_at' => 'DESC'])
           ->where(['Posts.user_id' => $id]);
 
         $user = $this->paginate($users, ['limit' => '5']);
@@ -372,7 +374,8 @@ class UsersController extends AppController
             $password = $this->request->getData('password');
             if (empty($password)) {
                 $data = [
-                'full_name' => $this->request->getData('full_name'),
+                'first_name' => $this->request->getData('first_name'),
+                'last_name' => $this->request->getData('last_name'),
                 'username' => $this->request->getData('username'),
                 'birthday' => $this->request->getData('birthday'),
                 'gender' => $this->request->getData('gender'),
@@ -380,7 +383,8 @@ class UsersController extends AppController
                 ];
             } else {
                 $data = [
-                'full_name' => $this->request->getData('full_name'),
+                'first_name' => $this->request->getData('first_name'),
+                'last_name' => $this->request->getData('last_name'),
                 'username' => $this->request->getData('username'),
                 'birthday' => $this->request->getData('birthday'),
                 'gender' => $this->request->getData('gender'),
@@ -449,14 +453,14 @@ class UsersController extends AppController
             $this->autoRender = false;
             $find = $this->request->getQuery('term');
             $results = $this->Users->find('all', [
-                                             'conditions' => ['Users.full_name LIKE ' => '%' . $find . '%'],
+                                             'conditions' => ['Users.first_name LIKE ' => '%' . $find . '%'],
                                              'recursive' => -1,
                                              ]);
 
             $resultArr = [];
 
             foreach ($results as $result) {
-                $resultArr[] = ['label' => $result->full_name , 'value' => $result->full_name ];
+                $resultArr[] = ['label' => $result->first_name , 'value' => $result->first_name];
             }
 
             echo json_encode($resultArr);
@@ -470,7 +474,7 @@ class UsersController extends AppController
             }
             $results = $this->Users->find()
             ->contain(['Posts'])
-            ->where(['Users.full_name LIKE' => '%' . $find . '%']);
+            ->where(['Users.first_name LIKE' => '%' . $find . '%']);
 
             $result = $this->paginate($results, ['limit' => 5]);
         }
@@ -545,7 +549,7 @@ class UsersController extends AppController
                 if ($this->Users->save($save)) {
                     $mailer = new Mailer('default');
                     $mailer->setFrom(['allanjumadiao.yns@gmail.com' => 'John Doe']);
-                    $mailer->setViewVars(['full_name' => $find->full_name,'token' => $new_token])
+                    $mailer->setViewVars(['full_name' => $find->first_name . " " . $find->last_name, 'token' => $new_token])
                     ->setTo($user_email)
                     ->setEmailFormat('html')
                     ->setSubject('Resend Email Verification')

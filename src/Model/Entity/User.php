@@ -11,7 +11,16 @@ use Cake\Auth\DefaultPasswordHasher;
  *
  * @property int $id
  * @property string $username
- * @property string $full_name
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $unit
+ * @property string $street
+ * @property string $city
+ * @property string $province
+ * @property string $country
+ * @property integer $zip_code
+ * @property string $phone_no
+ * @property string $remember_token
  * @property string $email
  * @property string $password
  * @property string $birthday
@@ -21,8 +30,8 @@ use Cake\Auth\DefaultPasswordHasher;
  * @property bool|null $verified
  * @property string $activation_token
  * @property \Cake\I18n\FrozenTime|null $generated_token
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \Cake\I18n\FrozenTime|null $created_at
+ * @property \Cake\I18n\FrozenTime|null $updated_at
  * @property \Cake\I18n\FrozenTime|null $deleted
  *
  * @property \App\Model\Entity\Comment[] $comments
@@ -43,8 +52,17 @@ class User extends Entity
      */
     protected $_accessible = [
         'username' => true,
-        'full_name' => true,
+        'first_name' => true,
+        'last_name' => true,
         'email' => true,
+        'unit' => true,
+        'street' => true,
+        'city' => true,
+        'province' => true,
+        'country' => true,
+        'zip_code' => true,
+        'phone_no' => true,
+        'remember_token' => true,
         'password' => true,
         'birthday' => true,
         'profile_path' => true,
@@ -53,8 +71,8 @@ class User extends Entity
         'verified' => true,
         'activation_token' => true,
         'generated_token' => true,
-        'created' => true,
-        'modified' => true,
+        'created_at' => true,
+        'updated_at' => true,
         'deleted' => true,
         'comments' => true,
         'likes' => true,

@@ -18,7 +18,7 @@
                     $div .= '<tr>';
                     $div .= '<td class="follow_profile" style="width:60px;height:60px;">' . $this->Html->image('upload/' . $followed_user->profile_path, ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', $followed_user->id]]) . '</td>';
                     $div .= '<td>' . $this->Html->link(
-                        $followed_user->full_name,
+                        h($followed_user->first_name) . " " . h($followed_user->last_name),
                         ['controller' => 'Users', 'action' => 'profile', $followed_user->id],
                         ['style' => 'color:inherit;text-decoration:none;']
                     ) . '</td>';
@@ -44,7 +44,7 @@
                     $div .= '<tr>';
                     $div .= '<td class="follow_profile p-1" style="width:60px;height:60px;">' . $this->Html->image('upload/' . $followed_user->profile_path, ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', $followed_user->id]]) . '</td>';
                     $div .= '<td> &nbsp;' . $this->Html->link(
-                        $followed_user->full_name,
+                        h($followed_user->first_name) . " " . h($followed_user->last_name),
                         ['controller' => 'Users', 'action' => 'profile', $followed_user->id],
                         ['style' => 'color:inherit;text-decoration:none;']
                     ) . '</td>';

@@ -15,7 +15,7 @@
                   $div .= '<tr>';
                   $div .= '<td class="follow_profile" style="width:60px;height:60px">' . $this->Html->image('upload/' . h($f->profile_path), ['alt' => 'Microblog', 'url' => ['controller' => 'Users', 'action' => 'profile', h($f->id)]]) . '</td>';
                   $div .= '<td> &nbsp;' . $this->Html->link(
-                      h($f->full_name),
+                      h($f->first_name) . " " . h($f->last_name),
                       ['controller' => 'Users', 'action' => 'profile', h($f->id)],
                       ['style' => 'color:inherit;text-decoration:none;']
                   ) . '</td>';

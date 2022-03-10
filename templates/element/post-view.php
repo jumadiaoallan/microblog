@@ -12,7 +12,7 @@
           <td>
                     &nbsp;
                     <?= $this->Html->link(
-                        h($userDetail->full_name),
+                        h($userDetail->first_name) . " " . h($userDetail->last_name),
                         ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)],
                         ['style' => 'color:inherit;text-decoration:none;']
                     ); ?>
@@ -27,7 +27,7 @@
           </td>
         </tr>
         <tr>
-          <td>&nbsp; <sup><?= date('m-d-Y h:i A', strtotime(h($post->created))) ?></sup></td>
+          <td>&nbsp; <sup><?= date('m-d-Y h:i A', strtotime(h($post->created_at))) ?></sup></td>
           <td></td>
         </tr>
       </table>
@@ -40,7 +40,7 @@
         ); ?>
       <p style="text-align: justify;"><?= h($post->post) ?></p>
 
-        <?php if (!empty($post->shared_post_id)) : ?>
+        <?php if ($post->shared_post_id != 0) : ?>
               <?php foreach ($allpost as $shared) : ?>
                     <?php if ($post->shared_post_id == $shared->id) : ?>
                         <?php if ($shared->deleted == null) : ?>
@@ -56,7 +56,7 @@
                             <td>
                                     &nbsp;
                                     <?= $this->Html->link(
-                                        h($userDetail->full_name),
+                                        h($userDetail->first_name) . " " . h($userDetail->last_name),
                                         ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)],
                                         ['style' => 'color:inherit;text-decoration:none;']
                                     ); ?>
@@ -65,7 +65,7 @@
                             <?php endforeach; ?>
                           </tr>
                           <tr>
-                            <td> &nbsp;<sup><?= date('m-d-Y H:i A', strtotime(h($shared->created))) ?></sup></td>
+                            <td> &nbsp;<sup><?= date('m-d-Y H:i A', strtotime(h($shared->created_at))) ?></sup></td>
                           </tr>
                         </table>
                       </div>
@@ -77,7 +77,7 @@
                                 ['style' => 'color:inherit;text-decoration:none;']
                             ); ?>
                       <p style="text-align: justify;"><?= h($shared->post) ?></p>
-                            <?php if (!empty($shared->image_path)) : ?>
+                            <?php if ($shared->image_path != 'none') : ?>
                           <div class="post_photo">
                                 <?= $this->Html->image('post_upload/' . h($shared->image_path), ['alt' => 'Microblog', 'border' => '1', 'class' => 'img-fluid mx-auto d-block']); ?>
                           </div>
@@ -96,7 +96,7 @@
         <?php endif; ?>
 
 
-        <?php if (!empty($post->image_path)) : ?>
+        <?php if ($post->image_path != 'none') : ?>
         <div class="post_photo">
             <?= $this->Html->image('post_upload/' . h($post->image_path), ['alt' => 'Microblog', 'border' => '1', 'class' => 'img-fluid img-thumbnail']); ?>
         </div>
@@ -146,7 +146,7 @@
                     <td>
                             &nbsp;
                             <?= $this->Html->link(
-                                h($element->full_name),
+                                h($element->first_name) . " " . h($element->last_name),
                                 ['controller' => 'Users', 'action' => 'profile', h($element->id)],
                                 ['style' => 'color:inherit;text-decoration:none;']
                             ); ?>

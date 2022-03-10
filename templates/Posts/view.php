@@ -8,7 +8,7 @@
                 <?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog']); ?>
         </td>
         <td>  &nbsp;
-                <?= h($userDetail->full_name)?>
+                <?= h($userDetail->first_name) . " " . h($userDetail->last_name)?>
         </td>
             <?php endif; ?>
         <?php endforeach; ?>
@@ -44,7 +44,7 @@
                             <td style=" width:50px;height:50px;" rowspan="2" class="p-2 post_profile"><?= $this->Html->image('upload/' . h($userDetail->profile_path), ['alt' => 'Microblog']); ?></td>
                             <td>
                                     <?= $this->Html->link(
-                                        h($userDetail->full_name),
+                                        h($userDetail->first_name) . " " . h($userDetail->last_name),
                                         ['controller' => 'Users', 'action' => 'profile', h($userDetail->id)],
                                         ['style' => 'color:inherit;text-decoration:none;']
                                     ); ?>
@@ -141,7 +141,7 @@
                   </td>
                   <td>      &nbsp;
                             <?= $this->Html->link(
-                                h($element->full_name),
+                                h($element->first_name) . " " . h($element->last_name),
                                 ['controller' => 'Users', 'action' => 'profile', h($element->id)],
                                 ['style' => 'color:inherit;text-decoration:none;']
                             ); ?>

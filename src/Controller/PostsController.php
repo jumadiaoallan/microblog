@@ -56,7 +56,7 @@ class PostsController extends AppController
 
           $users = $userPost->find()
             ->contain(['Comments', 'Likes'])
-            ->order(['Posts.created' => 'DESC'])
+            ->order(['Posts.created_at' => 'DESC'])
             ->where(['Posts.user_id IN' => $arr]);
 
         $user = $this->paginate($users, ['limit' => '5']);
@@ -184,16 +184,16 @@ class PostsController extends AppController
                 'user_id' => $logged['id'],
                 'image_path' => $fileName,
                 'post' => ' ',
-                'created' => $now,
-                'modified' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
                 ];
             } else {
                 $data = [
                 'user_id' => $logged['id'],
                 'image_path' => $fileName,
                 'post' => $this->request->getData('post'),
-                'created' => $now,
-                'modified' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
                 ];
             }
 
@@ -272,19 +272,19 @@ class PostsController extends AppController
                 $data = [
                 'image_path' => $fileName,
                 'post' => $this->request->getData('post'),
-                'modified' => $now,
+                'updated_at' => $now,
                 ];
             } else {
                 if (!empty($this->request->getData('remove_image'))) {
                     $data = [
                     'post' => $this->request->getData('post'),
                     'image_path' => null,
-                    'modified' => $now,
+                    'updated_at' => $now,
                     ];
                 } else {
                     $data = [
                     'post' => $this->request->getData('post'),
-                    'modified' => $now,
+                    'updated_at' => $now,
                     ];
                 }
             }
@@ -368,8 +368,8 @@ class PostsController extends AppController
             'user_id' => $this->request->getData('user_id'),
             'post' => $this->request->getData('post'),
             'shared_post_id' => $this->request->getData('post_id'),
-            'created' => $now,
-            'modified' => $now,
+            'created_at' => $now,
+            'updated_at' => $now,
             ];
             $post = $this->Posts->newEntity($data);
             if ($this->Posts->save($post)) {
@@ -385,8 +385,8 @@ class PostsController extends AppController
                 'user_from' => $this->request->getData('user_id'),
                 'notification' => 'Shared on your post.' . $post->id,
                 'status' => false,
-                'created' => $now,
-                'modified' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
                 ];
                 $noti = $notification->newEntity($data);
                 $notification->save($noti);
