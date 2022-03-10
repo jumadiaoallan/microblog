@@ -58,7 +58,7 @@ class UsersTable extends Table
         ]);
         $this->hasMany('Posts', [
             'foreignKey' => 'user_id',
-            'sort' => ['Posts.created' => 'DESC'],
+            'sort' => ['Posts.created_at' => 'DESC'],
         ]);
 
         $this->belongsTo('Followers', [
